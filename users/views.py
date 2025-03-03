@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from .models import Team
+from .models import Team, Member
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
