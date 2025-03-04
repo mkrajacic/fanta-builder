@@ -8,7 +8,6 @@ class TeamMemberInline(admin.StackedInline):
 class TeamAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["name", "team_image"]}),
-        ("Date information", {"fields": ["time_created", "time_updated"], "classes": ["collapse"]}),
     ]
     inlines = [TeamMemberInline]
 
