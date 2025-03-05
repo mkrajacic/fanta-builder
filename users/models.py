@@ -9,7 +9,7 @@ class User(AbstractUser):
     first_name = None
     last_name = None
     teams_count = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(max_teams_count)], default=0)
-    image = models.ImageField(null=True)
+    image = models.ImageField(null=True, upload_to="uploads")
 
     def __str__(self):
         return self.username
