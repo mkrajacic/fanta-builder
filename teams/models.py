@@ -1,7 +1,10 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
+from django.conf import settings
 User=get_user_model()
 
+max_usable_points = settings.MAXIMUM_USABLE_POINTS
 class Team(models.Model):
     name = models.CharField(max_length=50)
     team_image = models.ImageField()
@@ -13,6 +16,7 @@ class Singer(models.Model):
     name = models.CharField(max_length=50)
     song = models.CharField(max_length=100)
     singer_image = models.ImageField()
+    points_cost = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(max_usable_points)], default=0)
 
     def __str__(self):
         return self.name
