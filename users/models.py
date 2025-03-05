@@ -15,4 +15,4 @@ class User(AbstractUser):
         return self.username
 
     def reached_team_limit(self):
-        return self.teams_count <= max_teams_count
+        return self.teams_count >= max_teams_count
