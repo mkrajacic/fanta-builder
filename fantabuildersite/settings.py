@@ -59,7 +59,7 @@ ROOT_URLCONF = "fantabuildersite.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [os.path.join(BASE_DIR, 'templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -135,6 +135,9 @@ AUTH_USER_MODEL = "users.User"
 """
 CUSTOM SETTINGS START HERE
 """
+LOGIN_REDIRECT_URL = '/'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 MAXIMUM_TEAMS_PER_USER = 5
 MEMBERS_PER_TEAM = 5
 MAXIMUM_USABLE_POINTS = 60
