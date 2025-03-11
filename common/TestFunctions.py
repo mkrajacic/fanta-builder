@@ -8,8 +8,8 @@ def add_user(username):
 def add_team(name, user):
     return Team.objects.create(name=name, user_id=user)
 
-def add_singer(name, song):
-    return Singer.objects.create(name=name, song=song)
+def add_singer(name, song, cost=0):
+    return Singer.objects.create(name=name, song=song, points_cost=cost)
 
 def add_team_member(team_id, singer_id):
     return TeamMember.objects.create(team_id=team_id, singer_id=singer_id)

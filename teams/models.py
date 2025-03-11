@@ -17,6 +17,17 @@ class Team(models.Model):
         member_limit = settings.MEMBERS_PER_TEAM
         members_in_team_count = self.teammember_set.all().count()
         return members_in_team_count >= member_limit
+    
+    def reached_points_limit(self):
+        points_limit = settings.MAXIMUM_USABLE_POINTS
+        points_used = 0
+        members_in_team = self.teammember_set.all()
+        
+        for member in members_in_team:
+            singer = Singer.objects.get(pk=member.singer_id)
+            points_used += singer.points_cost
+        
+        return points_used >= points_limit
 
 class Singer(models.Model):
     name = models.CharField(max_length=50, unique=True)
