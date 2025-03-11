@@ -6,13 +6,13 @@ class UserCreationForm(AdminUserCreationForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "image", "teams_count")
+        fields = ("username", "email", "image")
 
 class UserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "image", "teams_count")
+        fields = ("username", "email", "image")
 
 class UserRegisterForm(UserCreationForm):
     class Meta:

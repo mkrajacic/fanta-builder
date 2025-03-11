@@ -11,14 +11,12 @@ class UserAdmin(UserAdmin):
     list_display = [
         "email",
         "username",
-        "teams_count",
         "is_staff",
-        "is_active",
-        'reached_team_limit'
+        "is_active"
     ]
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
-        ('Personal Info', {'fields': ('email', 'image', 'teams_count')}),
+        ('Personal Info', {'fields': ('email', 'image')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )

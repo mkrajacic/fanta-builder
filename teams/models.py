@@ -8,9 +8,15 @@ max_usable_points = settings.MAXIMUM_USABLE_POINTS
 class Team(models.Model):
     name = models.CharField(max_length=50, unique=True)
     team_image = models.ImageField(upload_to="uploads", null=True)
+    user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='team_creator')
 
     def __str__(self):
         return self.name
+    
+    def reached_member_limit(self):
+        member_limit = settings.MEMBERS_PER_TEAM
+        members_in_team_count = self.teammember_set.all().count()
+        return members_in_team_count >= member_limit
 
 class Singer(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -24,7 +30,6 @@ class Singer(models.Model):
 class TeamMember(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     singer = models.ForeignKey(Singer, on_delete=models.CASCADE)
-    added_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='team_member_assignor')
 
     class Meta:
         unique_together = ('team', 'singer')
