@@ -8,7 +8,7 @@ max_usable_points = settings.MAXIMUM_USABLE_POINTS
 class Team(models.Model):
     name = models.CharField(max_length=50, unique=True)
     team_image = models.ImageField(upload_to="uploads", null=True)
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='team_creator')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
