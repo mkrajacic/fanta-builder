@@ -5,8 +5,8 @@ User=get_user_model()
 def add_user(username):
     return User.objects.create(username=username)
 
-def add_team(name, user):
-    return Team.objects.create(name=name, user_id=user)
+def add_team(name, user, captain=None):
+    return Team.objects.create(name=name, user_id=user, captain_id=captain)
 
 def add_singer(name, song, cost=0):
     return Singer.objects.create(name=name, song=song, points_cost=cost)
