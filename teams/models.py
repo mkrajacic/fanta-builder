@@ -5,10 +5,20 @@ from django.conf import settings
 User=get_user_model()
 max_usable_points = settings.MAXIMUM_USABLE_POINTS
 
+class Singer(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    song = models.CharField(max_length=100)
+    singer_image = models.ImageField(upload_to="uploads", null=True)
+    points_cost = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(max_usable_points)], default=0)
+
+    def __str__(self):
+        return self.name
+
 class Team(models.Model):
     name = models.CharField(max_length=50, unique=True)
     team_image = models.ImageField(upload_to="uploads", null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    captain = models.ForeignKey(Singer, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.name
@@ -22,21 +32,10 @@ class Team(models.Model):
         points_limit = settings.MAXIMUM_USABLE_POINTS
         points_used = 0
         members_in_team = self.teammember_set.all()
-        
         for member in members_in_team:
             singer = Singer.objects.get(pk=member.singer_id)
             points_used += singer.points_cost
-        
         return points_used >= points_limit
-
-class Singer(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    song = models.CharField(max_length=100)
-    singer_image = models.ImageField(upload_to="uploads", null=True)
-    points_cost = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(max_usable_points)], default=0)
-
-    def __str__(self):
-        return self.name
 
 class TeamMember(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
