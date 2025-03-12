@@ -8,4 +8,6 @@ urlpatterns = [
     path("register/", include("users.urls")),
     path('account/', include('django.contrib.auth.urls')),
     path("teams/", include("teams.urls")),
+    path("rules/", include("rules.urls")),
+    path("results/", include("results.urls")),
 ]

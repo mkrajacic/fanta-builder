@@ -1,7 +1,7 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.conf import settings
+from django.contrib.auth import get_user_model
 User=get_user_model()
 max_usable_points = settings.MAXIMUM_USABLE_POINTS
 
