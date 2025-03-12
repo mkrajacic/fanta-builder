@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="h-100">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -15,8 +15,8 @@
     />
   </head>
 
-  <body>
-    <div id="content">{% block content %} {% endblock %}</div>
+  <body class="bg-dark d-flex flex-column h-100">
+    {% block content %} {% endblock %}
 
     <script src="{% static 'default.js' %}"></script>
     <script
