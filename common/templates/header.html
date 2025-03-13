@@ -1,0 +1,23 @@
+<header class="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
+    <a href="/" class="d-flex align-items-center text-body-emphasis">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M8 4h12v16h-8v-8h6V8h-8v12H2v-8h6zm0 10H4v4h4zm10 0h-4v4h4z"/></svg>
+        <span class="ps-1 fs-4 text-white">FantaBuilder</span>
+    </a>
+    <ul class="nav nav-underline">
+        <li class="nav-item">
+          <a class="nav-link text-pink-300" href="{% url 'teams:index' %}">My teams</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-pink-300" href="{% url 'home' %}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-pink-300" href="{% url 'home' %}">Leaderboards</a>
+          </li>
+        <li class="nav-item">
+          <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-link text-pink-100">Logout</button>
+          </form>
+        </li>
+    </ul>
+</header>

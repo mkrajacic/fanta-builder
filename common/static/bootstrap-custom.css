@@ -1,0 +1,43 @@
+:root {
+    --pink-100: #fff0f6; 
+    --pink-200: #ffd6e8;
+    --pink-300: #ffadd2;
+    --pink-400: #ff85c0;
+    --pink-500: #f759ab; 
+  }
+  
+  .bg-pink-100 { background-color: var(--pink-100) !important; }
+  .bg-pink-200 { background-color: var(--pink-200) !important; }
+  .bg-pink-300 { background-color: var(--pink-300) !important; }
+  .bg-pink-400 { background-color: var(--pink-400) !important; }
+  .bg-pink-500 { background-color: var(--pink-500) !important; }
+  
+  .text-pink-100 { color: var(--pink-100) !important; }
+  .text-pink-200 { color: var(--pink-200) !important; }
+  .text-pink-300 { color: var(--pink-300) !important; }
+  .text-pink-400 { color: var(--pink-400) !important; }
+  .text-pink-500 { color: var(--pink-500) !important; }
+  
+  .hover-bg-pink-100:hover { background-color: var(--pink-100) !important; }
+  .hover-text-pink-100:hover { color: var(--pink-100) !important; }
+
+.nav-link.active {
+    color: var(--pink-100) !important;
+    border-color: var(--pink-400) !important;
+  }
+  
+  .btn.active {
+    background-color: var(--pink-400) !important;
+    border-color: var(--pink-500) !important;
+    color: white !important;
+  }
+  
+  .nav-link.active:hover {
+    border-color: var(--pink-300) !important;
+  }
+  
+  .list-group-item.active {
+    background-color: var(--pink-300) !important;
+    border-color: var(--pink-400) !important;
+    color: var(--pink-500) !important;
+  }
