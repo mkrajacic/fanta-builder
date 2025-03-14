@@ -1,0 +1,8 @@
+{% extends "default.html" %}
+{% block content %}
+{% if user_teams.count == 0 %}
+<p class="text-pink-300 mb-2">No teams available</p>
+{% else %}
+{{user_teams}}
+{% endif %}
+{% endblock content %}
