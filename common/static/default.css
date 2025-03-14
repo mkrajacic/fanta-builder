@@ -6,13 +6,13 @@
     transform: scaleX(-1);
 }
 
-.form-signin {
+.form-auth {
     max-width: 330px;
     padding: 1rem;
     margin: 0 auto;
   }
   
-  .form-signin .form-floating:focus-within {
+  .form-auth .form-floating:focus-within {
     z-index: 2;
   }
 

@@ -1,8 +1,8 @@
 {% extends "default_auth.html" %}
 {% block title %}FantaBuilder Login{% endblock %}
 {% block content %}
-<main class="form-signin">
-  <form method="post" action="{% url 'login' %}" class="needs-validation">
+<main class="form-auth">
+  <form method="post" action="{% url 'login' %}">
     {% csrf_token %}
   
   <div class="mb-5">
@@ -26,8 +26,7 @@
       <div class="mb-4">
         <label for="id_password" class="form-label text-pink-400">Password</label>
         <input type="password" name="password" 
-               class="form-control border-pink-400"
-               autocomplete="new-password" required
+               class="form-control border-pink-400" required
                id="id_password">
       </div>
     <div class="mb-2"><a href="{% url 'password_reset' %}" class="text-pink-200 text-decoration-none">Lost password?</a></div>
