@@ -31,6 +31,113 @@
     border-color: var(--pink-500) !important;
     color: white !important;
   }
+
+.btn {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-pink-100 {
+  background-color: var(--pink-100) !important;
+  color: var(--pink-500) !important;
+  border-color: var(--pink-100) !important;
+}
+.btn-pink-100:hover {
+  background-color: var(--pink-200) !important;
+  border-color: var(--pink-200) !important;
+}
+
+.btn-pink-200 {
+  background-color: var(--pink-200) !important;
+  color: var(--pink-500) !important;
+  border-color: var(--pink-200) !important;
+}
+.btn-pink-200:hover {
+  background-color: var(--pink-300) !important;
+}
+
+.btn-pink-300 {
+  background-color: var(--pink-300) !important;
+  color: white !important;
+  border-color: var(--pink-300) !important;
+}
+.btn-pink-300:hover {
+  background-color: var(--pink-400) !important;
+}
+
+.btn-pink-400 {
+  background-color: var(--pink-400) !important;
+  color: white !important;
+  border-color: var(--pink-400) !important;
+}
+.btn-pink-400:hover {
+  background-color: var(--pink-500) !important;
+}
+
+.btn-pink-500 {
+  background-color: var(--pink-500) !important;
+  color: white !important;
+  border-color: var(--pink-500) !important;
+}
+.btn-pink-500:hover {
+  filter: brightness(90%);
+}
+
+.btn-outline-pink-500 {
+  color: var(--pink-500) !important;
+  border-color: var(--pink-500) !important;
+  background-color: transparent !important;
+}
+.btn-outline-pink-500:hover {
+  background-color: var(--pink-500) !important;
+  color: white !important;
+}
+
+.btn-outline-pink-400 {
+  color: var(--pink-400) !important;
+  border-color: var(--pink-400) !important;
+}
+.btn-outline-pink-400:hover {
+  background-color: var(--pink-400) !important;
+  color: white !important;
+}
+
+.btn-pink-500:active,
+.btn-pink-500.active {
+  background-color: var(--pink-400) !important;
+  border-color: var(--pink-500) !important;
+  box-shadow: 0 0 0 0.25rem rgba(247, 89, 171, 0.5) !important;
+}
+
+.btn-pink-500:focus {
+  box-shadow: 0 0 0 0.25rem rgba(247, 89, 171, 0.5) !important;
+}
+
+.btn-pink-500:disabled {
+  background-color: var(--pink-300) !important;
+  border-color: var(--pink-300) !important;
+  opacity: 0.7 !important;
+}
+
+.btn-gradient-pink {
+  background: linear-gradient(
+    45deg,
+    var(--pink-400),
+    var(--pink-500)
+  ) !important;
+  color: white !important;
+  border: none !important;
+}
+.btn-gradient-pink:hover {
+  background: linear-gradient(
+    45deg,
+    var(--pink-500),
+    var(--pink-400)
+  ) !important;
+}
+
+:root {
+  --pink-shadow: 0 0.5rem 1rem rgba(247, 89, 171, 0.15);
+}
   
   .nav-link.active:hover {
     border-color: var(--pink-300) !important;
