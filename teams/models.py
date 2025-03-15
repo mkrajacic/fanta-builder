@@ -39,7 +39,7 @@ class Team(models.Model):
         return points_used >= points_limit
     
     def get_members_with_singers(self):
-        return self.teammember_set.select_related('singer').all()
+        return [team_member.singer for team_member in self.teammember_set.select_related('singer').all()]
 
 class TeamMember(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)

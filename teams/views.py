@@ -20,9 +20,11 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
         teams_data = []
         for team in user_teams:
             team_member_singers = team.get_members_with_singers()
+            team_singers_count = len(team_member_singers)
             teams_data.append({
                 'team': team,
-                'singers': team_member_singers
+                'singers': team_member_singers,
+                'singers_count': team_singers_count
             })
         
         ctx['data'] = teams_data

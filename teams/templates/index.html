@@ -1,21 +1,12 @@
 {% extends "default.html" %}
 {% block content %}
-<p class="text-light">
-    {{data_count}}
-    {{data}}
-    <br><br><br>
-    {% for t in data %}
-        {{t.team}}
-        {{t.team}}
-    {% endfor %}
-</p>
 {% if data_count == 0 %}
     <p class="text-pink-300 mb-2">No teams available</p>
 {% else %}
 <div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5">
-    {% for team_member in data %}
-    {% with team=team_member.team %}
-    {% with singers=team_member.singers %}
+    {% for team_information in data %}
+    {% with team=team_information.team %}
+    {% with singers=team_information.singers %}
     <div class="col">
         <div class="card bg-pink-200" style="">
             <img src="{{team.team_image.url}}" class="card-img-top" alt="...">
@@ -23,8 +14,12 @@
                 <h3 class="card-title">{{team.name}}</h3>
                 <h5 class="text-secondary">{{team.captain}}</h5>
             </div>
-            {% if singers.count == 0 %}
-                <p class="text-pink-300 mb-2">No members in team</p>
+            {% if team_information.singers_count == 0 %}
+                    <div class="card-body bg-dark"> 
+                        <p class="card-text text-pink-500">
+                        No members in team
+                        </p>
+                    </div>
             {% else %}
             <ul class="list-group">
                 {% for team_singer in singers %}
