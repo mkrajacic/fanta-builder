@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
-from .models import Team
+from .models import Team, Singer, TeamMember
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import generic
@@ -10,10 +10,24 @@ User=get_user_model()
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "index.html"
-    context_object_name = "user_teams"
 
     def get_queryset(self):
         return self.request.user.team_set.all()
+    
+    def get_context_data(self, **kwargs):
+        ctx = super(ShowTeams, self).get_context_data(**kwargs)
+        user_teams = self.request.user.team_set.all()
+        teams_data = []
+        for team in user_teams:
+            team_member_singers = team.get_members_with_singers()
+            teams_data.append({
+                'team': team,
+                'singers': team_member_singers
+            })
+        
+        ctx['data'] = teams_data
+        ctx['data_count'] = len(teams_data)
+        return ctx
     
 class ViewTeam(generic.DetailView):
     model = Team

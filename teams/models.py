@@ -37,6 +37,9 @@ class Team(models.Model):
             singer = Singer.objects.get(pk=member.singer_id)
             points_used += singer.points_cost
         return points_used >= points_limit
+    
+    def get_members_with_singers(self):
+        return self.teammember_set.select_related('singer').all()
 
 class TeamMember(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
@@ -46,5 +49,5 @@ class TeamMember(models.Model):
         unique_together = ('team', 'singer')
 
     def __str__(self):
-        return self.team + ';' + self.singer
+        return str(self.team_id) + ';' + str(self.singer)
     
