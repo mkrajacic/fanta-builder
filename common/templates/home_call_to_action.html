@@ -1,0 +1,14 @@
+<div class="position-relative mt-5 p-5 text-center border border-light rounded-5 bg-pink-100 text-light">
+    <h1 class="text-dark">{{title}}</h1>
+    <p class="col-lg-6 mx-auto mb-4 text-dark fs-5">
+      {{text}}
+    </p>
+    <a href="{{button_url}}" class="btn btn-dark px-5 mb-3" type="button">
+      {{button_text}}
+    </a>
+    {% if login_button %}
+        <a href="{% url "login" %}" class="btn btn-secondary px-5 mb-3" type="button">
+            Login
+        </a>
+    {% endif %}
+  </div>

@@ -1,27 +1,29 @@
 {% extends "default.html" %}
 {% block content %}
-  <div class="row align-items-md-stretch">
-    <div class="col-md-6">
-      <div class="h-100 p-5 text-bg-dark rounded-3">
-        <h2>Rules</h2>
-        <button class="btn btn-outline-light" type="button">Vai</button>
+  <div class="row">
+    <div class="col-sm-6 mb-3 mb-sm-0">
+      <div class="card border-pink-400 bg-dark text-light">
+        <div class="card-body">
+          <h5 class="card-title text-pink-100">Rules</h5>
+          <p class="card-text">Read the rules and find out which events can earn or lose your team points.</p>
+          <a href="#" class="btn btn-outline-light">Go to rules</a>
+        </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="h-100 p-5 bg-light border rounded-3">
-        <h2>Singers</h2>
-        <button class="btn btn-outline-dark" type="button">Vai</button>
+    <div class="col-sm-6">
+      <div class="card border-pink-400 bg-dark text-light">
+        <div class="card-body">
+          <h5 class="card-title text-pink-100">Singers</h5>
+          <p class="card-text">Find out who are the singers you can add to your teams and what is the cost of putting them in your team.</p>
+          <a href="#" class="btn btn-outline-light">Go to singers</a>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="position-relative mt-5 p-5 text-center text-light bg-dark border border-dashed rounded-5">
-    <h1>Enter</h1>
-    <p class="col-lg-6 mx-auto mb-4">
-      Create your team(s) or check out how your existing teams are doing
-    </p>
-    <button class="btn btn-primary px-5 mb-3" type="button">
-      Login
-    </button>
-  </div>
+  {% if user.is_authenticated %}
+    {% include "home_call_to_action.html" with title="Enter" text="Create your team(s) or check out how your existing teams are doing" button_url="teams" button_text="Go to teams" %}
+  {% else %}
+    {% include "home_call_to_action.html" with title="Register" text="Register to start creating your team(s), or login if you already have an account" button_url="register" button_text="Sign up" login_button=True %}
+  {% endif %}
 {% endblock content %}

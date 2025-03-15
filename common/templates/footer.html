@@ -3,9 +3,14 @@
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">
             <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-medium">Rules</a></li>
             <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-medium">Singers</a></li>
-            <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-medium">Results</a></li>
-            <li class="nav-item"><a href="{% url 'teams:index' %}" class="nav-link px-2 text-dark fw-medium">My teams</a></li>
+            {% if user.is_authenticated %}
+                <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-medium">Results</a></li>
+                <li class="nav-item"><a href="{% url 'teams:index' %}" class="nav-link px-2 text-dark fw-medium">My teams</a></li>
+            {% endif %}
             <li class="nav-item"><a href="#" class="nav-link px-2 text-dark fw-medium">Leaderboards</a></li>
+            {% if not user.is_authenticated %}
+                <li class="nav-item"><a href="{% url "users:register" %}" class="nav-link px-2 text-dark fw-medium">Sign up</a></li>
+            {% endif %}
         </ul>
         <p class="text-center text-dark">© 2025 mk</p>
     </div>

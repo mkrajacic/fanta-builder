@@ -138,6 +138,31 @@
 :root {
   --pink-shadow: 0 0.5rem 1rem rgba(247, 89, 171, 0.15);
 }
+
+.border-pink-500 {
+  --bs-border-opacity: 1;
+  border-color: var(--pink-500) !important;
+}
+
+.border-pink-400 {
+  --bs-border-opacity: 1;
+  border-color: var(--pink-400) !important;
+}
+
+.border-pink-300 {
+  --bs-border-opacity: 1;
+  border-color: var(--pink-300) !important;
+}
+
+.border-pink-200 {
+  --bs-border-opacity: 1;
+  border-color: var(--pink-200) !important;
+}
+
+.border-pink-100 {
+  --bs-border-opacity: 1;
+  border-color: var(--pink-100) !important;
+}
   
   .nav-link.active:hover {
     border-color: var(--pink-300) !important;
