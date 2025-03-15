@@ -1,8 +1,47 @@
 {% extends "default.html" %}
 {% block content %}
 {% if user_teams.count == 0 %}
-<p class="text-pink-300 mb-2">No teams available</p>
+    <p class="text-pink-300 mb-2">No teams available</p>
 {% else %}
-{{user_teams}}
+<div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5">
+    {% for team in user_teams %}
+    <div class="col">
+        <div class="card bg-pink-200" style="">
+            <img src="{{team.team_image.url}}" class="card-img-top" alt="...">
+            <div class="card-body">
+                <h3 class="card-title">{{team.name}}</h3>
+                <h5 class="text-secondary">{{team.captain}}</h5>
+            </div>
+                <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-start bg-pink-100">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">Singer Name</div>
+                            Song
+                        </div>
+                        <span class="badge text-light bg-pink-500 rounded-pill">14</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start bg-pink-100">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Singer Name</div>
+                        Song
+                    </div>
+                    <span class="badge text-light bg-pink-500 rounded-pill">14</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-start bg-pink-100">
+                    <div class="ms-2 me-auto">
+                        <div class="fw-bold">Singer Name</div>
+                        Song
+                    </div>
+                    <span class="badge text-light bg-pink-500 rounded-pill">14</span>
+                    </li>
+                </ul>
+            <div class="card-body">
+                <a href="#" class="card-link btn btn-outline-dark">Edit team</a>
+                <a href="#" class="card-link btn btn-dark">Edit members</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endif %}
 {% endblock content %}

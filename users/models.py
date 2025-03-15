@@ -7,7 +7,7 @@ class User(AbstractUser):
     pass
     first_name = None
     last_name = None
-    image = models.ImageField(null=True, upload_to="uploads")
+    image = models.ImageField(null=True)
 
     def __str__(self):
         return self.username

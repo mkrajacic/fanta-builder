@@ -142,6 +142,8 @@ CUSTOM SETTINGS START HERE
 """
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = 'unauthorized' #where LoginRequiredMixin redirects
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
+MEDIA_URL = '/uploads/'
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MAXIMUM_TEAMS_PER_USER = 5

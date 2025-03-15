@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Team, TeamMember
+from .models import Team, TeamMember, Singer
 
 class TeamMemberInline(admin.StackedInline):
     model = TeamMember
@@ -7,8 +7,9 @@ class TeamMemberInline(admin.StackedInline):
 
 class TeamAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {"fields": ["name", "team_image"]}),
+        (None, {"fields": ["name", "team_image", "user", "captain"]}),
     ]
     inlines = [TeamMemberInline]
 
 admin.site.register(Team, TeamAdmin)
+admin.site.register(Singer)
