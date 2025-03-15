@@ -141,6 +141,7 @@ AUTH_USER_MODEL = "users.User"
 CUSTOM SETTINGS START HERE
 """
 LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = 'unauthorized' #where LoginRequiredMixin redirects
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MAXIMUM_TEAMS_PER_USER = 5

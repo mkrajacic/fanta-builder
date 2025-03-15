@@ -10,4 +10,5 @@ urlpatterns = [
     path("teams/", include("teams.urls")),
     path("rules/", include("rules.urls")),
     path("results/", include("results.urls")),
+    path("unauthorized/", TemplateView.as_view(template_name='unauthorized.html'), name='unauthorized')
 ]
