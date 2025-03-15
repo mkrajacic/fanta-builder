@@ -1,8 +1,9 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Team, Singer, TeamMember
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.views import generic
 from django.utils import timezone
 from django.contrib.auth import get_user_model
@@ -30,6 +31,24 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
         ctx['data'] = teams_data
         ctx['data_count'] = len(teams_data)
         return ctx
+
+@login_required
+def edit_members(request, team_id):
+    if request.method == "POST":
+        return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
+    else:
+        user = request.user
+        team = get_object_or_404(user.team_set, pk=team_id)
+        team_singers = team.get_members_with_singers()
+    
+    return render(request, "edit-members.html", {
+        "team": team,
+        "team_singers": team_singers
+    })
+
+@login_required
+def edit_members_success(request):
+    return HttpResponse("success")
     
 class ViewTeam(generic.DetailView):
     model = Team

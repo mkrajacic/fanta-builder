@@ -34,8 +34,11 @@
             </ul>
             {% endif %}
             <div class="card-body">
+                <p hx-trigger="memberListChanged from:body" hx-get="{% url 'teams:edit-members-success' %}" hx-target="this">
+                    Scelte sbagliate scelte fatte
+                </p>
                 <a href="#" class="card-link btn btn-outline-dark">Edit team</a>
-                <a href="#" class="card-link btn btn-dark">Edit members</a>
+                <a href="#" class="card-link btn btn-dark" hx-get="{% url 'teams:edit-members' team.id %}" hx-target="#membersDialog">Edit members</a>
             </div>
         </div>
     </div>
@@ -43,5 +46,15 @@
     {% endwith %}
     {% endfor %}
 </div>
+<div id="membersModal" class="modal fade">
+    <div id="membersDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+</div>
+<div id="teamsModal" class="modal fade">
+    <div id="teamsDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+</div>
+{% block add_script %}
+    {% load static %}
+    <script src="{% static 'htmlx-modal.js' %}"></script>
+{% endblock add_script %}
 {% endif %}
 {% endblock content %}
