@@ -8,6 +8,7 @@ from django.views import generic
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 User=get_user_model()
+from django.conf import settings
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "index.html"
@@ -39,11 +40,17 @@ def edit_members(request, team_id):
     else:
         user = request.user
         team = get_object_or_404(user.team_set, pk=team_id)
-        team_singers = team.get_members_with_singers()
+        singers = Singer.objects.all()
+        max_points = settings.MAXIMUM_USABLE_POINTS
+        max_slots = settings.MEMBERS_PER_TEAM
+        form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
     
     return render(request, "edit-members.html", {
         "team": team,
-        "team_singers": team_singers
+        "singers": singers,
+        "max_points": max_points,
+        "max_slots": max_slots,
+        "form_action": form_action,
     })
 
 @login_required
