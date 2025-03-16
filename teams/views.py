@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.conf import settings
+import json
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "index.html"
@@ -36,6 +37,21 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
 @login_required
 def edit_members(request, team_id):
     if request.method == "POST":
+        json_string = request.POST['choices']
+        json_converted = json.loads(json_string)
+        captain = request.POST['captain']
+        team_members = []
+        team = get_object_or_404(Team, pk=team_id)
+        #team = Team.objects.get(pk=team_id)
+        for choice in json_converted:
+            if not TeamMember.team_contains_member(TeamMember, team_id, choice):
+                if choice == captain:
+                    if not TeamMember.is_captain(TeamMember, team_id, choice):
+                        new_captain = get_object_or_404(Singer, pk=choice)
+                        team.captain = new_captain
+                team_members.append(TeamMember(team_id=team_id, singer_id=choice))
+
+        TeamMember.objects.bulk_create(team_members)
         return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
     else:
         user = request.user
@@ -55,7 +71,7 @@ def edit_members(request, team_id):
 
 @login_required
 def edit_members_success(request):
-    return HttpResponse("success")
+    return HttpResponse("it works")
     
 class ViewTeam(generic.DetailView):
     model = Team

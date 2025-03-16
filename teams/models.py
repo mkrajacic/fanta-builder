@@ -51,3 +51,15 @@ class TeamMember(models.Model):
     def __str__(self):
         return str(self.team_id) + ';' + str(self.singer)
     
+    def team_contains_member(self, team_id, singer_id):
+        member_in_team = self.objects.filter(team=team_id, singer=singer_id)
+        return member_in_team.count() > 0
+    
+    def is_captain(self, team_id, singer_id):
+        team = Team.objects.get(pk=team_id)
+        captain_id = team.captain_id
+        if captain_id == singer_id:
+            return True
+            
+        return False
+    

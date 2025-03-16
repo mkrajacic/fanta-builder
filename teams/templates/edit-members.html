@@ -61,7 +61,7 @@
           <span class="fw-bold">Members selected: <span x-text="membersSelectedCount + '/' + maxSlots" class="text-pink-500"></span></span>
         </div>
     </div>
-    <form hx-post="{{ request.path }}"
+    <form hx-post="{{ request.path }}" id="membersForm"
       @submit.prevent="{}">
       {% csrf_token %}
 
@@ -152,7 +152,7 @@
           </div>
         </template>
       </div>
-      
+      <input type="hidden" name="choices" :value="JSON.stringify(selectedChoices)">
   </form>
 </div>
 
@@ -163,6 +163,7 @@
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           <button 
           hx-post="{{form_action}}"  
+          hx-include="#membersForm"
           hx-swap="innerHTML"
           :disabled="!withinMaxPoints || !teamFilled || !captainSelected"
           class="btn"
