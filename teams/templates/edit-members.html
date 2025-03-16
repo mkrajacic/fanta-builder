@@ -1,14 +1,116 @@
-<form hx-post="{{ request.path }}" class="modal-content">
-    {% csrf_token %}
-    <div class="modal-header">
+<div class="modal-content">
+  <div class="modal-header">
       <h5 class="modal-title">Edit team members</h5>
     </div>
     <div class="modal-body">
-      {{ team }}
-      {{ team_singers }}
-    </div>
+        <form hx-post="{{ request.path }}" x-data="{
+              singers: [
+              {% for singer in singers %}
+                  {
+                      id: {{singer.id}},
+                      name: '{{singer.name}}',
+                      song: '{{singer.song}}',
+                      cost: {{singer.points_cost}},
+                      image: '{{singer.singer_image}}'
+                  },
+              {% endfor %}
+              ],
+              max_points: {{max_points}},
+              max_slots: {{max_slots}},
+              captain_id: null,
+              selected_choices: [],
+              get selected_singers() {
+                  let selected_ids = this.selected_choices.map(id=>Number(id));
+                  return this.singers.filter(c => selected_ids.includes(c.id));
+              },
+              get points_used() {
+                  console.log(this.selected_singers.reduce((sum, c) => sum + c.cost, 0));
+                  return this.selected_singers.reduce((sum, c) => sum + c.cost, 0);
+              },
+              get remaining_points() {
+                  let result = this.max_points - this.points_used;
+                  return result;
+              },
+              isSelected(singer) {
+                  return this.selected_choices.includes(String(singer));
+              },
+              insufficientPoints(cost) {
+                  return this.remaining_points < cost;
+              },
+              get withinMaxPoints() {
+                  return this.remaining_points >= 0;
+              },
+              get teamFilled() {
+                  return this.selected_choices.length == this.max_slots;
+              }
+          }"
+          @submit.prevent="{}">
+          {% csrf_token %}
+          <select 
+              class="w-100 h-auto form-select"
+              x-model="selected_choices" 
+              multiple 
+          >
+              <template x-for="singer in singers" :key="singer.id">
+                  <option 
+                      :value="singer.id"
+                      :disabled="!isSelected(singer.id) && insufficientPoints(singer.cost)"
+                  >
+                          <div class="d-flex align-items-center" style="gap:8px;">
+                              <img :src=`/uploads/${singer.image}` />
+                              <div :style="{
+                                  'text-decoration': isSelected(singer.id) ? 'line-through' : 'none',
+                                  'color': !isSelected(singer.id) && insufficientPoints(singer.cost) ? 'red' : '',
+                                  }" class="d-inline-block">
+                                  <h3 x-text="singer.name + ' (' + (singer.cost || 0) + ' punti)'"></h3>
+                                  <p x-text="singer.song + ' (' + (singer.cost || 0) + ' punti)'"></p>
+                              </div>
+                              <span :style="{
+                                  'display': isSelected(singer.id) ? 'inline' : 'none',
+                                  'text-decoration': 'none !important'
+                              }">✓</span>
+                          </div>
+                  </option>
+              </template>
+          </select>
+
+          <!--enable captain selection only if 5/max singers have been chosen-->
+          <div class="mt-4" :style="{
+              'display': teamFilled ? 'block' : 'none'
+          }">
+              <p>Seleziona capitano:</p>
+              <template x-for="singer in singers.filter(c => isSelected(c.id))" :key="singer.id">
+                  <label class="block">
+                      <input 
+                          type="radio" 
+                          name="captain" 
+                          :value="singer.id"
+                          x-model="captain_id"
+                      >
+                      <span x-text="singer.name"></span>
+                  </label>
+              </template>
+          </div>
+
+          <div class="mt-4">
+              <p>Selezionati: <span x-text="selected_choices"></span></p>
+              <input type="hidden" name="scelte" :value="JSON.stringify(selected_choices)">
+              <p>Punti usati: <span x-text="points_used"></span></p>
+              <p>Punti rimanenti: <span x-text="remaining_points"></span></p>
+          </div>
+
+          <button 
+              hx-post="{{form_action}}" 
+              hx-swap="innerHTML"
+              :disabled="!withinMaxPoints || !teamFilled"
+              class="btn"
+              :class="(!withinMaxPoints || !teamFilled) ? 'btn-disabled' : 'btn-info'"
+          >
+              Confirm choices
+          </button>
+        </form>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
       <button type="submit" class="btn btn-outline-pink-400">Save</button>
     </div>
-  </form>
+</div>
