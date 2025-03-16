@@ -1,14 +1,173 @@
-<form hx-post="{{ request.path }}" class="modal-content">
-    {% csrf_token %}
-    <div class="modal-header">
-      <h5 class="modal-title">Edit team members</h5>
+<div class="modal-content modal-dialog modal-dialog-scrollable" x-data="{
+  singers: [
+  {% for singer in singers %}
+      {
+          id: {{singer.id}},
+          name: '{{singer.name}}',
+          song: '{{singer.song}}',
+          cost: {{singer.points_cost}},
+          image: '{{singer.singer_image}}'
+      },
+  {% endfor %}
+  ],
+  maxPoints: {{max_points}},
+  maxSlots: {{max_slots}},
+  captainId: null,
+  selectedChoices: [],
+  get selectedSingers() {
+      let selectedIds = this.selectedChoices.map(id=>Number(id));
+      return this.singers.filter(c => selectedIds.includes(c.id));
+  },
+  get pointsUsed() {
+      return this.selectedSingers.reduce((sum, c) => sum + c.cost, 0);
+  },
+  get remainingPoints() {
+      return this.maxPoints - this.pointsUsed;
+  },
+  isSelected(singer) {
+      return this.selectedChoices.includes(String(singer));
+  },
+  insufficientPoints(cost) {
+      return this.remainingPoints < cost;
+  },
+  get withinMaxPoints() {
+      return this.remainingPoints >= 0;
+  },
+  get teamFilled() {
+      return this.selectedChoices.length == this.maxSlots;
+  },
+  get membersSelectedCount() {
+    return this.selectedChoices.length;
+  },
+  get captainSelected() {
+    return this.isSelected(this.captainId);
+  },
+  toggleSelection(singerId) {
+      const stringId = String(singerId);
+      this.selectedChoices = this.selectedChoices.includes(stringId)
+        ? this.selectedChoices.filter(id => id !== stringId)
+        : [...this.selectedChoices, stringId];
+  }
+}">
+  <div class="modal-header">
+    <h5 class="modal-title">Edit team members</h5>
+  </div>
+  <div class="modal-body p-3">
+    <div class="d-flex justify-content-between mb-3">
+        <div>
+          <span class="fw-bold">Points available: <span x-text="remainingPoints" class="text-pink-500"></span></span>
+        </div>
+        <div>
+          <span class="fw-bold">Members selected: <span x-text="membersSelectedCount + '/' + maxSlots" class="text-pink-500"></span></span>
+        </div>
     </div>
-    <div class="modal-body">
-      {{ team }}
-      {{ team_singers }}
-    </div>
-    <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      <button type="submit" class="btn btn-outline-pink-400">Save</button>
-    </div>
+    <form hx-post="{{ request.path }}"
+      @submit.prevent="{}">
+      {% csrf_token %}
+
+      <select 
+          x-model="selectedChoices" 
+          multiple 
+          class="d-none">
+          <template x-for="singer in singers" :key="singer.id">
+              <option 
+                  :value="singer.id"
+                  :disabled="!isSelected(singer.id) && insufficientPoints(singer.cost)">
+              </option>
+          </template>
+      </select>
+
+      <div class="position-relative mb-3" x-data="{ open: false }">
+        <div class="form-control" 
+             @click="open = !open"
+             :class="{ 'border-primary': open }"
+             style="min-height: 100px; cursor: pointer; overflow-y: auto;">
+          <div class="d-flex flex-wrap gap-2 p-2">
+            <template x-for="singer in selectedSingers" :key="singer.id">
+              <div class="badge bg-pink-400 d-flex align-items-center gap-2">
+                <template x-if="singer.image">
+                  <img :src="`/uploads/${singer.image}`" 
+                       class="rounded-circle" 
+                       style="width:24px;height:24px;object-fit:cover">
+                </template>
+                <span x-text="singer.name"></span>
+                <button 
+                type="button" 
+                class="btn btn-sm btn-outline-light p-0 delete-button" 
+                @click.stop="toggleSelection(singer.id)"
+                style="width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M14.28 2a2 2 0 0 1 1.897 1.368L16.72 5H20a1 1 0 1 1 0 2l-.003.071l-.867 12.143A3 3 0 0 1 16.138 22H7.862a3 3 0 0 1-2.992-2.786L4.003 7.07L4 7a1 1 0 0 1 0-2h3.28l.543-1.632A2 2 0 0 1 9.721 2zm3.717 5H6.003l.862 12.071a1 1 0 0 0 .997.929h8.276a1 1 0 0 0 .997-.929zM10 10a1 1 0 0 1 .993.883L11 11v5a1 1 0 0 1-1.993.117L9 16v-5a1 1 0 0 1 1-1m4 0a1 1 0 0 1 1 1v5a1 1 0 1 1-2 0v-5a1 1 0 0 1 1-1m.28-6H9.72l-.333 1h5.226z"/></g></svg>
+              </button>
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <div class="card position-absolute w-100 mt-1" 
+             x-show="open"
+             style="z-index: 1000; max-height: 500px; overflow-y: auto; width: calc(100% - 2rem);">
+          <div class="card-body p-2">
+            <template x-for="singer in singers" :key="singer.id">
+              <div class="d-flex align-items-center gap-3 p-2 hover-bg"
+                   :class="{ 
+                     'bg-pink-200': isSelected(singer.id),
+                     'opacity-25': !isSelected(singer.id) && insufficientPoints(singer.cost),
+                     'pe-none': !isSelected(singer.id) && insufficientPoints(singer.cost)
+                   }"
+                   @click="toggleSelection(singer.id)"
+                   :style="{
+                     cursor: !isSelected(singer.id) && insufficientPoints(singer.cost) 
+                       ? 'not-allowed' 
+                       : 'pointer'
+                   }">
+                <img :src="`/uploads/${singer.image}`" 
+                     class="rounded-circle"
+                     style="width:50px;height:50px;object-fit:cover">
+                <div>
+                  <h6 class="mb-0" x-text="singer.name"></h6>
+                  <small x-text="singer.song"></small>
+                </div>
+                <div class="ms-auto">
+                  <span x-text="singer.cost + ' points'"></span>
+                  <span x-show="isSelected(singer.id)" class="ms-2 text-pink-500 fw-bold"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M19.495 3.133a1 1 0 0 1 1.352.309l.99 1.51a1 1 0 0 1-.155 1.279l-.003.004l-.014.013l-.057.053l-.225.215a84 84 0 0 0-3.62 3.736c-2.197 2.416-4.806 5.578-6.562 8.646c-.49.856-1.687 1.04-2.397.301l-6.485-6.738a1 1 0 0 1 .051-1.436l1.96-1.768A1 1 0 0 1 5.6 9.2l3.309 2.481c5.169-5.097 8.1-7.053 10.586-8.548m.21 2.216c-2.29 1.432-5.148 3.509-9.998 8.358A1 1 0 0 1 8.4 13.8l-3.342-2.506l-.581.524l5.317 5.526c1.846-3.07 4.387-6.126 6.49-8.438a86 86 0 0 1 3.425-3.552l-.003-.005Z"/></g></svg></span>
+                </div>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4" :style="{ 'display': teamFilled ? 'block' : 'none' }">
+        <h5>Select captain:</h5>
+        <template x-for="singer in selectedSingers" :key="singer.id">
+          <div class="form-check form-check">
+            <input 
+                type="radio" 
+                name="captain"
+                :id="'captain' + singer.id"
+                class="form-check-input" 
+                :value="singer.id"
+                x-model="captainId">
+            <label class="form-check-label" :for="'captain' + singer.id" x-text="singer.name"></label>
+          </div>
+        </template>
+      </div>
+      
   </form>
+</div>
+
+  <div class="modal-footer">
+        <div class="alert bg-pink-100 captain-alert" role="alert" x-show="teamFilled && !captainSelected">
+          To confirm selection, choose a team captain
+        </div>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button 
+          hx-post="{{form_action}}"  
+          hx-swap="innerHTML"
+          :disabled="!withinMaxPoints || !teamFilled || !captainSelected"
+          class="btn"
+          :class="(!withinMaxPoints || !teamFilled || !captainSelected) ? 'btn-outline-secondary' : 'btn-pink-400'">
+          Confirm
+        </button>
+  </div>
+</div>

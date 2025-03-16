@@ -20,3 +20,7 @@
     box-shadow: 0 0 0 3px rgba(255, 121, 161, 0.25);
     border-color: #ff85c0;
   }
+
+  .captain-alert {
+    width: 60% !important;
+  }
