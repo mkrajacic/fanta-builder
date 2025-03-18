@@ -41,15 +41,14 @@ def edit_members(request, team_id):
         json_converted = json.loads(json_string)
         captain = request.POST['captain']
         team_members = []
-        team = get_object_or_404(Team, pk=team_id)
-        #team = Team.objects.get(pk=team_id)
+        team = get_object_or_404(Team, pk=team_id)  	
         for choice in json_converted:
             if not TeamMember.team_contains_member(TeamMember, team_id, choice):
-                if choice == captain:
-                    if not TeamMember.is_captain(TeamMember, team_id, choice):
-                        new_captain = get_object_or_404(Singer, pk=choice)
-                        team.captain = new_captain
                 team_members.append(TeamMember(team_id=team_id, singer_id=choice))
+            if choice == captain:
+                new_captain = get_object_or_404(Singer, pk=choice)
+                team.captain = new_captain
+                team.save()
 
         TeamMember.objects.bulk_create(team_members)
         return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
