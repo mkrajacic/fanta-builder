@@ -37,20 +37,28 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
 @login_required
 def edit_members(request, team_id):
     if request.method == "POST":
-        json_string = request.POST['choices']
-        json_converted = json.loads(json_string)
+        json_string_choices = request.POST['choices']
+        choices = json.loads(json_string_choices)
         captain = request.POST['captain']
-        team_members = []
-        team = get_object_or_404(Team, pk=team_id)  	
-        for choice in json_converted:
+
+        team = get_object_or_404(Team, pk=team_id)
+        new_members = []
+        current_members = TeamMember.objects.filter(team_id=team.id)
+
+        for current_member in current_members:
+            if current_member.id not in choices:
+                member_to_delete = get_object_or_404(TeamMember, team_id=current_member.team, singer_id=current_member.singer)
+                member_to_delete.delete()
+
+        for choice in choices:
             if not TeamMember.team_contains_member(TeamMember, team_id, choice):
-                team_members.append(TeamMember(team_id=team_id, singer_id=choice))
+                new_members.append(TeamMember(team_id=team_id, singer_id=choice))
             if choice == captain:
                 new_captain = get_object_or_404(Singer, pk=choice)
                 team.captain = new_captain
                 team.save()
 
-        TeamMember.objects.bulk_create(team_members)
+        TeamMember.objects.bulk_create(new_members)
         return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
     else:
         user = request.user
