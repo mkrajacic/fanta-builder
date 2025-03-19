@@ -39,7 +39,7 @@ def edit_members(request, team_id):
     if request.method == "POST":
         json_string_choices = request.POST['choices']
         choices = json.loads(json_string_choices)
-        captain = request.POST['captain']
+        captain = int(request.POST['captain'])
 
         team = get_object_or_404(Team, pk=team_id)
         new_members = []
@@ -51,18 +51,18 @@ def edit_members(request, team_id):
                 member_to_delete.delete()
 
         for choice in choices:
-            if not TeamMember.team_contains_member(TeamMember, team_id, choice):
-                new_members.append(TeamMember(team_id=team_id, singer_id=choice))
-            if choice == captain:
-                new_captain = get_object_or_404(Singer, pk=choice)
-                team.captain = new_captain
+            singer = get_object_or_404(Singer, pk=choice)
+            if not TeamMember.team_contains_member(TeamMember, team_id, singer.id):
+                new_members.append(TeamMember(team_id=team_id, singer_id=singer.id))
+            if singer.id == captain:
+                team.captain = singer
                 team.save()
 
         TeamMember.objects.bulk_create(new_members)
         return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
     else:
         user = request.user
-        team = get_object_or_404(user.team_set, pk=team_id)
+        team = get_object_or_404(Singer, pk=team_id)
         singers = Singer.objects.all()
         max_points = settings.MAXIMUM_USABLE_POINTS
         max_slots = settings.MEMBERS_PER_TEAM

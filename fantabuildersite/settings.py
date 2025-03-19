@@ -137,6 +137,31 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # Keep existing loggers
+    'formatters': {
+        'custom_format': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'custom_handler': {
+            'level': 'DEBUG',  # Set handler level to DEBUG
+            'class': 'logging.StreamHandler',
+            'formatter': 'custom_format',
+        },
+    },
+    'loggers': {
+        'custom_logger': {
+            'handlers': ['custom_handler'],
+            'level': 'DEBUG',  # Set logger level to DEBUG
+            'propagate': False,  # Prevent logs from propagating to other loggers
+        },
+    },
+}
+
 """
 CUSTOM SETTINGS START HERE
 """
