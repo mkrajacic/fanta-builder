@@ -35,7 +35,11 @@
             {% endif %}
             <div class="card-body">
                 <a href="#" class="card-link btn btn-outline-dark">Edit team</a>
+                {% if team_information.singers_count > 0 %}
                 <a href="#" class="card-link btn btn-dark" hx-get="{% url 'teams:edit-members' team.id %}" hx-target="#membersDialog">Edit members</a>
+                {% else %}
+                <a href="#" class="card-link btn btn-dark" hx-get="{% url 'teams:edit-members' team.id %}?add=true" hx-target="#membersDialog">Add members</a>
+                {% endif %}
             </div>
         </div>
     </div>

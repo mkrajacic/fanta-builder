@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.conf import settings
 import json
+from urllib.parse import urlencode
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "index.html"
@@ -36,6 +37,10 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def edit_members(request, team_id):
+    add_mode = request.GET.get("add")
+    if add_mode == "true":
+        add_mode = True
+
     if request.method == "POST":
         json_string_choices = request.POST['choices']
         choices = json.loads(json_string_choices)
@@ -43,12 +48,12 @@ def edit_members(request, team_id):
 
         team = get_object_or_404(Team, pk=team_id)
         new_members = []
-        current_members = TeamMember.objects.filter(team_id=team.id)
-
-        for current_member in current_members:
-            if current_member.id not in choices:
-                member_to_delete = get_object_or_404(TeamMember, team_id=current_member.team, singer_id=current_member.singer)
-                member_to_delete.delete()
+        if not add_mode:
+            current_members = TeamMember.objects.filter(team_id=team.id)
+            for current_member in current_members:
+                if current_member.id not in choices:
+                    member_to_delete = get_object_or_404(TeamMember, team_id=current_member.team, singer_id=current_member.singer)
+                    member_to_delete.delete()
 
         for choice in choices:
             singer = get_object_or_404(Singer, pk=choice)
@@ -61,12 +66,15 @@ def edit_members(request, team_id):
         TeamMember.objects.bulk_create(new_members)
         return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
     else:
-        user = request.user
-        team = get_object_or_404(Singer, pk=team_id)
+        team = get_object_or_404(Team, pk=team_id)
         singers = Singer.objects.all()
         max_points = settings.MAXIMUM_USABLE_POINTS
         max_slots = settings.MEMBERS_PER_TEAM
-        form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
+        if add_mode:
+            form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
+            form_action += '?' + urlencode({"add": "true"})
+        else:
+            form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
     
     return render(request, "edit-members.html", {
         "team": team,
