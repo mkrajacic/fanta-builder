@@ -5,13 +5,13 @@
 {% else %}
 <div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5">
     {% for team_information in data %}
-    {% with team=team_information.team %}
-    {% with singers_count=team_information.singers_count %}
-    {% with singers=team_information.singers %}
-        {% include "team.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
+        {% with team=team_information.team %}
+        {% with singers_count=team_information.singers_count %}
+        {% with singers=team_information.singers %}
+            {% include "team.html" %}
+        {% endwith %}
+        {% endwith %}
+        {% endwith %}
     {% endfor %}
 </div>
 <div id="membersModal" class="modal fade">

@@ -1,4 +1,11 @@
-<div class="col">
+<div
+class="col"
+hx-get="{% url "teams:load-team" team.id %}"
+hx-target="this"
+hx-swap="innerHTML"
+hx-trigger="teamChanged from:body"
+id="team_{{team.id}}"
+>
     <div class="card bg-pink-200" style="">
         <img src="{{team.team_image.url}}" class="card-img-top" alt="...">
         <div class="card-body">

@@ -6,7 +6,7 @@ window.onload = (event) => {
 
         htmx.on("htmx:afterSwap", (e) => {
             if (e.detail.target.id == dialogId) {
-            md.show();
+                md.show();
             }
         })
         
@@ -18,7 +18,7 @@ window.onload = (event) => {
         })
         
         htmx.on("hidden.bs.modal", () => {
-            document.getElementById("membersDialog").innerHTML = "";
+            document.getElementById(dialogId).innerHTML = "";
         })
     });
 
@@ -32,4 +32,5 @@ window.onload = (event) => {
       toastBody.innerText = e.detail.value
       toast.show()
     })
+
 };
