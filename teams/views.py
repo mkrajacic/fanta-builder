@@ -64,7 +64,11 @@ def edit_members(request, team_id):
                 team.save()
 
         TeamMember.objects.bulk_create(new_members)
-        return HttpResponse(status=204, headers={'HX-Trigger': 'memberListChanged'})
+        return HttpResponse(status=204, headers={
+                'HX-Trigger': json.dumps({
+                    "teamChanged": None,
+                    "showMessage": "Teams members successfully updated"
+                })})
     else:
         team = get_object_or_404(Team, pk=team_id)
         singers = Singer.objects.all()

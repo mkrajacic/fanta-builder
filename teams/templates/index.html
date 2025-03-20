@@ -53,9 +53,19 @@
 <div id="teamsModal" class="modal fade">
     <div id="teamsDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
 </div>
+
+<div class="position-fixed top-0 end-0 p-3">
+    <div id="toast" class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div id="toast-body" class="toast-body"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+</div>
+
 {% block add_script %}
     {% load static %}
-    <script src="{% static 'htmlx-modal.js' %}"></script>
+    <script src="{% static 'htmlx-interactive.js' %}"></script>
 {% endblock add_script %}
 {% endif %}
 {% endblock content %}
