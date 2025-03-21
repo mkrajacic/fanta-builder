@@ -24,3 +24,13 @@
   .captain-alert {
     width: 60% !important;
   }
+
+  .rules-list li {
+    list-style-type: none;
+    background: url('star.svg') left center no-repeat; 
+    padding-left: 35px;
+  }
+
+  .occurences-list li {
+    padding-left: 10px;
+  }

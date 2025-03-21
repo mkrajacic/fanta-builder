@@ -13,7 +13,7 @@ import json
 from urllib.parse import urlencode
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
-    template_name = "index.html"
+    template_name = "teams/index.html"
 
     def get_queryset(self):
         return self.request.user.team_set.all()
@@ -80,7 +80,7 @@ def edit_members(request, team_id):
         else:
             form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
     
-    return render(request, "edit-members.html", {
+    return render(request, "teams/edit-members.html", {
         "team": team,
         "singers": singers,
         "max_points": max_points,

@@ -1,0 +1,57 @@
+{% extends "default.html" %}
+{% block content %}
+{% if rules_count == 0 %}
+    <p class="text-pink-300 mb-2">No rules available</p>
+{% else %}
+<ul class="nav nav-tabs fs-5 font-monospace" id="ruleTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="text-pink-500 btn-outline-pink-500 active" id="rules-tab" data-bs-toggle="tab" data-bs-target="#rules-tab-pane" type="button" role="tab" aria-controls="rules-tab-pane" aria-selected="true">Rules</button>
+    </li>
+    <li class="nav-item ps-2" role="presentation">
+      <button class="text-pink-500 btn-outline-pink-500" id="bonus-tab" data-bs-toggle="tab" data-bs-target="#bonus-tab-pane" type="button" role="tab" aria-controls="bonus-tab-pane" aria-selected="false">Bonuses</button>
+    </li>
+    <li class="nav-item ps-2" role="presentation">
+        <button class="text-pink-500 btn-outline-pink-500" id="penalty-tab" data-bs-toggle="tab" data-bs-target="#penalty-tab-pane" type="button" role="tab" aria-controls="penalty-tab-pane" aria-selected="false">Penalties</button>
+    </li>
+</ul>
+  <div class="tab-content" id="ruleTabContent">
+    <div class="tab-pane fade show active" id="rules-tab-pane" role="tabpanel" aria-labelledby="rules-tab" tabindex="0">
+        <ul class="ps-4 pt-2 rules-list">
+            {% for rule in rules %}
+                <li class="text-light bg-dark mt-4">
+                    {{rule.rule}}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="tab-pane fade" id="bonus-tab-pane" role="tabpanel" aria-labelledby="bonus-tab" tabindex="0">
+        <ul class="list-unstyled ps-4 pt-2 occurences-list">
+            {% for bonus_event in bonuses %}
+                <li class="text-light mt-4">
+                    <span class="text-success fw-semibold">
+                        +{{bonus_event.points}}
+                    </span>
+                    <span class="ps-1">
+                        {{bonus_event.occurence}}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="tab-pane fade" id="penalty-tab-pane" role="tabpanel" aria-labelledby="penalty-tab" tabindex="0">
+        <ul class="list-unstyled ps-4 pt-2 occurences-list">
+            {% for penalty_event in penalties %}
+                <li class="text-light mt-4">
+                    <span class="text-danger fw-semibold">
+                        -{{penalty_event.points}}
+                    </span>
+                    <span class="ps-1">
+                        {{penalty_event.occurence}}
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+  </div>
+{% endif %}
+{% endblock content %}
