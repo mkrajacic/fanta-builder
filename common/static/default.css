@@ -34,3 +34,7 @@
   .occurences-list li {
     padding-left: 10px;
   }
+
+  .singer-card {
+    background-color: #343b43 !important;
+  }

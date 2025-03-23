@@ -34,6 +34,16 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
         ctx['data'] = teams_data
         ctx['data_count'] = len(teams_data)
         return ctx
+    
+class ShowSingers(generic.ListView):
+    template_name = "singers/index.html"
+    context_object_name = "singers"
+
+    def get_queryset(self):
+        singers = Singer.objects.all()
+        self.queryset = singers
+        self.extra_context = {"singers_count": len(singers)}
+        return super().get_queryset()
 
 @login_required
 def edit_members(request, team_id):

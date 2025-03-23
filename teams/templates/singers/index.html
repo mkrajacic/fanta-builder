@@ -1,0 +1,25 @@
+{% extends "default.html" %}
+{% block content %}
+{% if singers_count == 0 %}
+    <p class="text-pink-300 mb-2">No singers available</p>
+{% else %}
+    {% for singer in singers %}
+        <div class="container card singer-card border-pink-500 text-light mt-3 w-50">
+            <div class="row card-body">
+                <div class="col-sm-6">
+                    <h5 class="card-title">{{singer.name}}</h5>
+                    <p class="card-text fst-italic">{{singer.song}}</p>
+                    <p class="card-text">
+                        Cost: <span class="text-pink-500 fw-bold">{{singer.points_cost}}</span>
+                    </p>
+                </div>
+                <div class="col-sm-6 d-flex flex-column align-items-end">
+                    <img src="/uploads/{{singer.singer_image}}" 
+                    class="rounded-circle" 
+                    style="width:100px;height:100px;object-fit:cover">
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock content %}

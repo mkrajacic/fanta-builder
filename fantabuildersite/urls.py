@@ -3,9 +3,11 @@ from django.urls import path, include
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.conf.urls.static import static
+from teams import views
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name='home.html'), name='home'),
+    path("singers/", views.ShowSingers.as_view(), name='singers'),
     path("admin/", admin.site.urls),
     path("register/", include("users.urls")),
     path('account/', include('django.contrib.auth.urls')),
