@@ -99,6 +99,35 @@ def edit_members(request, team_id):
     })
 
 @login_required
+def edit_team(request, team_id):
+    add_mode = request.GET.get("add")
+    if add_mode == "true":
+        add_mode = True
+
+    if request.method == "POST":
+        name = str(request.POST['name'])
+        team_image = str(request.POST['team_image'])
+        team = get_object_or_404(Team, pk=team_id)
+
+        return HttpResponse(status=204, headers={
+                'HX-Trigger': json.dumps({
+                    "teamChanged": None,
+                    "showMessage": "Teams information successfully updated"
+                })})
+    else:
+        team = get_object_or_404(Team, pk=team_id)
+        if add_mode:
+            form_action = reverse('teams:edit-team', kwargs={'team_id': team_id})
+            form_action += '?' + urlencode({"add": "true"})
+        else:
+            form_action = reverse('teams:edit-team', kwargs={'team_id': team_id})
+    
+    return render(request, "teams/edit-team.html", {
+        "team": team,
+        "form_action": form_action,
+    })
+
+@login_required
 def edit_members_success(request):
     return HttpResponse("it works")
     

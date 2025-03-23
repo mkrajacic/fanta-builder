@@ -1,0 +1,58 @@
+<div class="modal-content modal-dialog modal-dialog-scrollable" x-data="{
+        imageEnabled: false,
+        teamImage: '',
+        nameValue: '{{team.name}}',
+        isImageValid() {
+            if(!this.imageEnabled) {
+                this.teamImage = '';
+                return true;
+            }else{
+                return this.teamImage.length > 0;
+            }
+        },
+        formValid() {
+            if(this.nameValue.length == 0 || !this.isImageValid()) {
+                return false;
+            }
+            return true;
+        }
+    }">
+    <div class="modal-header">
+      <h5 class="modal-title">Edit team information</h5>
+    </div>
+    <div class="modal-body p-3">
+      <form hx-post="{{ request.path }}" id="teamsForm"
+        @submit.prevent="{}">
+        {% csrf_token %}
+        <div>
+            <label for="name" class="col-form-label">Name</label>
+            <input type="text" class="form-control" id="name" x-model="nameValue">
+        </div>
+
+        <div class="form-check form-switch mt-5" x-on:click="imageEnabled = ! imageEnabled">
+            <input class="form-check-input" type="checkbox" role="switch" id="imageSwitch" name="imageSwitch">
+            <label class="form-check-label" for="imageSwitch">Update image?</label>
+        </div>
+
+        <div x-show="imageEnabled">
+            <label for="team_image" class="col-form-label">Team image</label>
+            <input class="form-control" type="file" id="team_image" name="team_image" accept="image/png, image/jpeg"  x-ref="team_image" @change="teamImage = $refs.team_image.value"/>
+        </div>
+
+
+    </form>
+  </div>
+  
+    <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button 
+            hx-post="{{form_action}}"  
+            hx-include="#teamsForm"
+            hx-swap="innerHTML"
+            :disabled="!formValid()"
+            class="btn"
+            :class="(!formValid()) ? 'btn-outline-secondary' : 'btn-pink-400'">
+            Confirm
+          </button>
+    </div>
+  </div>
