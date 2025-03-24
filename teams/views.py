@@ -84,11 +84,15 @@ def edit_members(request, team_id):
         singers = Singer.objects.all()
         max_points = settings.MAXIMUM_USABLE_POINTS
         max_slots = settings.MEMBERS_PER_TEAM
+        current_members_ids = []
         if add_mode:
             form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
             form_action += '?' + urlencode({"add": "true"})
         else:
             form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
+            current_members = TeamMember.objects.filter(team_id=team.id)
+            for current_member in current_members:
+                current_members_ids.append(current_member.singer_id)
     
     return render(request, "teams/edit-members.html", {
         "team": team,
@@ -96,6 +100,8 @@ def edit_members(request, team_id):
         "max_points": max_points,
         "max_slots": max_slots,
         "form_action": form_action,
+        "current_members": current_members_ids,
+        "add_mode": "true" if add_mode == True else "false"
     })
 
 @login_required
