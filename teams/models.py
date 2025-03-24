@@ -19,7 +19,7 @@ class Team(models.Model):
     name = models.CharField(max_length=50, unique=True)
     team_image = models.ImageField(null=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    captain = models.ForeignKey(Singer, on_delete=models.SET_NULL, null=True)
+    captain = models.ForeignKey(Singer, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.name
