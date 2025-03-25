@@ -54,7 +54,13 @@
   }
 }">
   <div class="modal-header">
-    <h5 class="modal-title">Edit team members</h5>
+    <h5 class="modal-title">
+      {% if add_mode == "true" %}
+        Add team members
+      {% else %}
+        Edit team members
+      {% endif %}
+    </h5>
   </div>
   <div class="modal-body p-3">
     <div class="d-flex justify-content-between mb-3">
