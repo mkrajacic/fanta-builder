@@ -141,7 +141,7 @@ def reload_team(request, team_id):
     team_member_singers = team.get_members_with_singers()
     team_singers_count = len(team_member_singers)
 
-    return render(request, "team.html", {
+    return render(request, "teams/team.html", {
         'team': team,
         'singers': team_member_singers,
         'singers_count': team_singers_count,
