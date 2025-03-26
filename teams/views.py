@@ -12,6 +12,9 @@ from django.conf import settings
 import json
 from urllib.parse import urlencode
 
+max_points = settings.MAXIMUM_USABLE_POINTS
+max_slots = settings.MEMBERS_PER_TEAM
+
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "teams/index.html"
 
@@ -76,14 +79,13 @@ def edit_members(request, team_id):
         TeamMember.objects.bulk_create(new_members)
         return HttpResponse(status=204, headers={
                 'HX-Trigger': json.dumps({
-                    "teamChanged": None,
-                    "showMessage": "Teams members successfully updated"
-                })})
+                    "showMessage": "Team members successfully updated",
+                    "teamMembersChanged_" + str(team.id): None
+                }),
+            })
     else:
         team = get_object_or_404(Team, pk=team_id)
         singers = Singer.objects.all()
-        max_points = settings.MAXIMUM_USABLE_POINTS
-        max_slots = settings.MEMBERS_PER_TEAM
         current_members_ids = []
         if add_mode:
             form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
@@ -134,8 +136,19 @@ def edit_team(request, team_id):
     })
 
 @login_required
-def edit_members_success(request):
-    return HttpResponse("it works")
+def reload_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    team_member_singers = team.get_members_with_singers()
+    team_singers_count = len(team_member_singers)
+
+    return render(request, "team.html", {
+        'team': team,
+        'singers': team_member_singers,
+        'singers_count': team_singers_count,
+        "max_points": max_points,
+        "max_slots": max_slots,
+    })
+        
     
 class ViewTeam(generic.DetailView):
     model = Team
