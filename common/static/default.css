@@ -38,3 +38,8 @@
   .singer-card {
     background-color: #343b43 !important;
   }
+
+  .captain-div svg {
+    width: 40px;
+    height: 40px;
+  }

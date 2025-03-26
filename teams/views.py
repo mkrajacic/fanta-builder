@@ -82,7 +82,7 @@ def edit_members(request, team_id):
         return HttpResponse(status=204, headers={
                 'HX-Trigger': json.dumps({
                     "showMessage": success_message,
-                    "teamMembersChanged_" + str(team.id): None
+                    "teamDataChanged_" + str(team.id): None
                 }),
             })
     else:
@@ -121,7 +121,7 @@ def edit_team(request, team_id):
 
         return HttpResponse(status=204, headers={
                 'HX-Trigger': json.dumps({
-                    "teamChanged": None,
+                    "teamDataChanged": None,
                     "showMessage": "Teams information successfully updated"
                 })})
     else:
@@ -150,12 +150,22 @@ def reload_team(request, team_id):
         "max_points": max_points,
         "max_slots": max_slots,
     })
-        
-    
-class ViewTeam(generic.DetailView):
-    model = Team
-    template_name = "teams/view-team.html"
 
-    def get_queryset(self):
-        #return Team.objects.filter(data_pub__lte=timezone.now(), scelta__isnull=False).distinct()
-        return "ecco"
+@login_required
+def update_captain(request):
+    success_message = "Team captain successfully changed"
+
+    if request.method == "POST":
+        team_id = request.POST['team_id']
+        captain_id = request.POST['captain_id']
+        team = get_object_or_404(Team, pk=team_id)
+        singer = get_object_or_404(Singer, pk=captain_id)
+
+        team.captain = singer
+        team.save()
+
+        return HttpResponse(status=204, headers={
+                'HX-Trigger': json.dumps({
+                    "teamDataChanged_" + str(team_id): None,
+                    "showMessage": success_message
+                })})
