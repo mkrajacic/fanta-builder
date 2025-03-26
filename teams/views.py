@@ -69,8 +69,8 @@ def edit_members(request, team_id):
         TeamMember.objects.bulk_create(new_members)
         return HttpResponse(status=204, headers={
                 'HX-Trigger': json.dumps({
-                    "showMessage": "Teams members successfully updated",
-                    "teamChanged": team.id
+                    "showMessage": "Team members successfully updated",
+                    "teamMembersChanged_" + str(team.id): None
                 }),
             })
     else:
@@ -91,7 +91,7 @@ def edit_members(request, team_id):
     })
 
 @login_required
-def load_team(request, team_id):
+def reload_team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     team_member_singers = team.get_members_with_singers()
     team_singers_count = len(team_member_singers)

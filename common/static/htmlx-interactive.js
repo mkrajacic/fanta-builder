@@ -11,9 +11,13 @@ window.onload = (event) => {
         })
         
         htmx.on("htmx:beforeSwap", (e) => {
-            if (e.detail.target.id == dialogId && !e.detail.xhr.response) {
+            if (e.detail.target.id == dialogId && !e.detail.xhr.response || e.detail.target.classList.contains("team")) {
                 md.hide();
-                e.detail.shouldSwap = false;
+                if(e.detail.target.classList.contains("team")) {
+                    e.detail.shouldSwap = true;
+                }else{
+                    e.detail.shouldSwap = false;
+                }
             }
         })
         
