@@ -51,8 +51,10 @@ class ShowSingers(generic.ListView):
 @login_required
 def edit_members(request, team_id):
     add_mode = request.GET.get("add")
+    success_message = "Team members successfully updated"
     if add_mode == "true":
         add_mode = True
+        success_message = "Team members successfully added"
 
     if request.method == "POST":
         json_string_choices = request.POST['choices']
@@ -79,7 +81,7 @@ def edit_members(request, team_id):
         TeamMember.objects.bulk_create(new_members)
         return HttpResponse(status=204, headers={
                 'HX-Trigger': json.dumps({
-                    "showMessage": "Team members successfully updated",
+                    "showMessage": success_message,
                     "teamMembersChanged_" + str(team.id): None
                 }),
             })
