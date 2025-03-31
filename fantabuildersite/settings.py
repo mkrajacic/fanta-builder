@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from django.contrib import messages
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,6 +32,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MESSAGE_TAGS = {
+    messages.INFO: "text-white bg-primary",
+    messages.SUCCESS: "text-white bg-success",
+    messages.WARNING: "text-dark bg-warning",
+    messages.ERROR: "text-white bg-danger",
+}
 
 # Application definition
 
@@ -54,6 +62,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'fantabuildersite.middleware.HtmxMessageMiddleware',
 ]
 
 ROOT_URLCONF = "fantabuildersite.urls"

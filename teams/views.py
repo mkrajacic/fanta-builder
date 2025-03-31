@@ -11,6 +11,8 @@ User=get_user_model()
 from django.conf import settings
 import json
 from urllib.parse import urlencode
+from django.contrib import messages
+from common import UtilityFunctions
 
 max_points = settings.MAXIMUM_USABLE_POINTS
 max_slots = settings.MEMBERS_PER_TEAM
@@ -79,12 +81,7 @@ def edit_members(request, team_id):
                 team.save()
 
         TeamMember.objects.bulk_create(new_members)
-        return HttpResponse(status=204, headers={
-                'HX-Trigger': json.dumps({
-                    "showMessage": success_message,
-                    "teamDataChanged_" + str(team.id): None
-                }),
-            })
+        return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
     else:
         team = get_object_or_404(Team, pk=team_id)
         singers = Singer.objects.all()
@@ -163,9 +160,4 @@ def update_captain(request):
 
         team.captain = singer
         team.save()
-
-        return HttpResponse(status=204, headers={
-                'HX-Trigger': json.dumps({
-                    "teamDataChanged_" + str(team_id): None,
-                    "showMessage": success_message
-                })})
+        return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
