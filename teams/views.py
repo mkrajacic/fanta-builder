@@ -18,6 +18,7 @@ logger = logging.getLogger('custom_logger')
 
 max_points = settings.MAXIMUM_USABLE_POINTS
 max_slots = settings.MEMBERS_PER_TEAM
+max_teams = settings.MAXIMUM_TEAMS_PER_USER
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "teams/index.html"
@@ -40,6 +41,7 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
         
         ctx['data'] = teams_data
         ctx['data_count'] = len(teams_data)
+        ctx['max_teams'] = max_teams
         return ctx
     
 class ShowSingers(generic.ListView):

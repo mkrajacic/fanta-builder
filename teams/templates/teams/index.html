@@ -1,19 +1,24 @@
 {% extends "default.html" %}
 {% block content %}
-<div class="float-end">
-    <button class="btn btn-pink-400" type="button" hx-get="{% url 'teams:add-team' %}" hx-target="#teamsDialog">Add team</button>
+<div class="float-end" x-data="{
+    teamsCount: {{data_count}},
+    maxTeams: {{max_teams}},
+    get reachedTeamLimit() {
+        return Number(this.teamsCount) >= Number({{max_teams}})
+    }
+}">
+    <button :disabled="reachedTeamLimit" class="btn btn-pink-400" type="button" hx-get="{% url 'teams:add-team' %}"
+        hx-target="#teamsDialog">Add
+        team</button>
 </div>
 {% if data_count == 0 %}
-    <p class="text-pink-300 mb-2">No teams available</p>
+<p class="text-pink-300 mb-2">No teams available</p>
 {% else %}
-<div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5 team"
-hx-get="{% url 'teams:reload-teams' %}"
-hx-target="this"
-hx-swap="innerHTML"
-hx-trigger="teamRefresh from:body"
->
+<div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5 team" hx-get="{% url 'teams:reload-teams' %}"
+    hx-target="this" hx-swap="innerHTML" hx-trigger="teamRefresh from:body">
     {% include "teams/show-teams.html" %}
 </div>
+{% endif %}
 
 <div id="membersModal" class="modal fade">
     <div id="membersDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
@@ -23,8 +28,7 @@ hx-trigger="teamRefresh from:body"
 </div>
 
 {% block add_script %}
-    {% load static %}
-    <script src="{% static 'htmlx-interactive.js' %}"></script>
+{% load static %}
+<script src="{% static 'htmlx-interactive.js' %}"></script>
 {% endblock add_script %}
-{% endif %}
 {% endblock content %}
