@@ -16,9 +16,12 @@ class TeamForm(ModelForm):
         return data
     
     def clean_team_image(self):
-        data = self.cleaned_data["team_image"]
-        logger.warning(data)
-        if(data == '/unknown.svg'):
-            return None
+        data = self.cleaned_data.get("team_image")
         
-        return data
+        if data and hasattr(data, 'file'):
+            return data  # Return uploaded file
+        
+        if self.instance and self.instance.team_image:
+            return self.instance.team_image
+        
+        return '/unknown.svg'

@@ -113,16 +113,18 @@ def add_team(request):
     form_action = reverse('teams:add-team')
 
     if request.method == "POST":
-        logger.debug("its post")
         form = TeamForm(request.POST, request.FILES)
+        logger.debug(request.FILES)
 
         if form.is_valid():
             name = form.cleaned_data["name"]
             team_image = form.cleaned_data["team_image"]
             user = request.user
+            logger.warning(team_image)
 
             try:
                 if(team_image is not None):
+                    logger.debug("its not none")
                     team = Team.objects.create(name=name, user=user, team_image=team_image)
                 else:
                     team = Team.objects.create(name=name, user=user)
@@ -155,16 +157,14 @@ def edit_team(request, team_id):
 
     if request.method == "POST":
         form = TeamForm(request.POST, request.FILES, instance=team)
+        logger.debug("before cleaned data")
+        logger.debug(request.FILES)
 
         if form.is_valid():
-            name = form.cleaned_data["name"]
-            team_image = form.cleaned_data["team_image"]
 
             try:
-                team.name = name
-                if(team_image is not None):
-                    team.team_image = team_image
-                    
+                team = form.save(commit=False)
+                team.user = request.user
                 team.save()
             except Exception as e:
                 logger.error(f"Exception while editing team: {e}")
@@ -227,7 +227,7 @@ def delete_team(request, team_id):
 
     if request.method == "DELETE":
         team = get_object_or_404(Team, pk=team_id)
-        
+
         try:
             team.delete()
         except Exception as e:
