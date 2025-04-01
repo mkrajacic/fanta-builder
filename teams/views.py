@@ -130,7 +130,7 @@ def add_team(request):
                 logger.error(f"Exception while adding team: {e}")
                 return UtilityFunctions.toastTrigger(request, 204, f"Failed to add team", "error")
             
-            return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamAdded": None}])
+            return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamRefresh": None}])
         else:
 
             return render(request, "teams/edit-team.html", {
@@ -220,6 +220,21 @@ def reload_teams(request):
         'data': teams_data,
         'data_count': len(teams_data)
     })
+
+@login_required
+def delete_team(request, team_id):
+    success_message = "Team successfully deleted"
+
+    if request.method == "DELETE":
+        team = get_object_or_404(Team, pk=team_id)
+        
+        try:
+            team.delete()
+        except Exception as e:
+            logger.error(f"Exception while deleting team: {e}")
+            return UtilityFunctions.toastTrigger(request, 204, f"Failed to delete team", "error")
+        
+        return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamRefresh": None}])
 
 @login_required
 def update_captain(request):

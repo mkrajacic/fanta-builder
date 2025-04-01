@@ -10,7 +10,7 @@
 hx-get="{% url 'teams:reload-teams' %}"
 hx-target="this"
 hx-swap="innerHTML"
-hx-trigger="teamAdded from:body"
+hx-trigger="teamRefresh from:body"
 >
     {% include "teams/show-teams.html" %}
 </div>
