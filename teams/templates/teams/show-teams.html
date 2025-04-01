@@ -1,0 +1,9 @@
+{% for team_information in data %}
+{% with team=team_information.team %}
+{% with singers_count=team_information.singers_count %}
+{% with singers=team_information.singers %}
+    {% include "teams/team.html" %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+{% endfor %}

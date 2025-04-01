@@ -1,19 +1,20 @@
 {% extends "default.html" %}
 {% block content %}
+<div class="float-end">
+    <button class="btn btn-pink-400" type="button" hx-get="{% url 'teams:add-team' %}" hx-target="#teamsDialog">Add team</button>
+</div>
 {% if data_count == 0 %}
     <p class="text-pink-300 mb-2">No teams available</p>
 {% else %}
-<div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5">
-    {% for team_information in data %}
-    {% with team=team_information.team %}
-    {% with singers_count=team_information.singers_count %}
-    {% with singers=team_information.singers %}
-        {% include "teams/team.html" %}
-    {% endwith %}
-    {% endwith %}
-    {% endwith %}
-    {% endfor %}
+<div class="row row-cols-1 row-cols-md-3 row-cols-sm-2 g-5 team"
+hx-get="{% url 'teams:reload-teams' %}"
+hx-target="this"
+hx-swap="innerHTML"
+hx-trigger="teamAdded from:body"
+>
+    {% include "teams/show-teams.html" %}
 </div>
+
 <div id="membersModal" class="modal fade">
     <div id="membersDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
 </div>

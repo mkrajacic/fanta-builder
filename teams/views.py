@@ -11,8 +11,10 @@ User=get_user_model()
 from django.conf import settings
 import json
 from urllib.parse import urlencode
-from django.contrib import messages
 from common import UtilityFunctions
+from .forms import TeamForm
+import logging
+logger = logging.getLogger('custom_logger')
 
 max_points = settings.MAXIMUM_USABLE_POINTS
 max_slots = settings.MEMBERS_PER_TEAM
@@ -106,31 +108,83 @@ def edit_members(request, team_id):
     })
 
 @login_required
-def edit_team(request, team_id):
-    add_mode = request.GET.get("add")
-    if add_mode == "true":
-        add_mode = True
+def add_team(request):
+    success_message = "Team successfully added"
+    form_action = reverse('teams:add-team')
 
     if request.method == "POST":
-        name = str(request.POST['name'])
-        team_image = str(request.POST['team_image'])
-        team = get_object_or_404(Team, pk=team_id)
+        logger.debug("its post")
+        form = TeamForm(request.POST, request.FILES)
 
-        return HttpResponse(status=204, headers={
-                'HX-Trigger': json.dumps({
-                    "teamDataChanged": None,
-                    "showMessage": "Teams information successfully updated"
-                })})
-    else:
-        team = get_object_or_404(Team, pk=team_id)
-        if add_mode:
-            form_action = reverse('teams:edit-team', kwargs={'team_id': team_id})
-            form_action += '?' + urlencode({"add": "true"})
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            team_image = form.cleaned_data["team_image"]
+            user = request.user
+
+            try:
+                if(team_image is not None):
+                    team = Team.objects.create(name=name, user=user, team_image=team_image)
+                else:
+                    team = Team.objects.create(name=name, user=user)
+            except Exception as e:
+                logger.error(f"Exception while adding team: {e}")
+                return UtilityFunctions.toastTrigger(request, 204, f"Failed to add team", "error")
+            
+            return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamAdded": None}])
         else:
-            form_action = reverse('teams:edit-team', kwargs={'team_id': team_id})
+
+            return render(request, "teams/edit-team.html", {
+                "form": form,
+                "form_action": form_action,
+            })
+
+    else:
+        logger.debug("its not post")
+        form = TeamForm()
+    
+        return render(request, "teams/edit-team.html", {
+            "form": form,
+            "form_action": form_action,
+        })
+
+@login_required
+def edit_team(request, team_id):
+    team = get_object_or_404(Team, pk=team_id)
+    form_action = reverse('teams:edit-team', kwargs={'team_id': team_id})
+    success_message = "Team information successfully updated"
+
+    if request.method == "POST":
+        form = TeamForm(request.POST, request.FILES, instance=team)
+
+        if form.is_valid():
+            name = form.cleaned_data["name"]
+            team_image = form.cleaned_data["team_image"]
+
+            try:
+                team.name = name
+                if(team_image is not None):
+                    team.team_image = team_image
+                    
+                team.save()
+            except Exception as e:
+                logger.error(f"Exception while editing team: {e}")
+                return UtilityFunctions.toastTrigger(request, 204, f"Failed to edit team", "error")
+            
+            return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
+        else:
+        
+            return render(request, "teams/edit-team.html", {
+                "team": team,
+                "form": form,
+                "form_action": form_action,
+            })
+
+    else:
+        form = TeamForm(instance=team)
     
     return render(request, "teams/edit-team.html", {
         "team": team,
+        "form": form,
         "form_action": form_action,
     })
 
@@ -146,6 +200,25 @@ def reload_team(request, team_id):
         'singers_count': team_singers_count,
         "max_points": max_points,
         "max_slots": max_slots,
+    })
+
+@login_required
+def reload_teams(request):
+    user_teams = request.user.team_set.all()
+
+    teams_data = []
+    for team in user_teams:
+        team_member_singers = team.get_members_with_singers()
+        team_singers_count = len(team_member_singers)
+        teams_data.append({
+            'team': team,
+            'singers': team_member_singers,
+            'singers_count': team_singers_count
+        })
+
+    return render(request, "teams/show-teams.html", {
+        'data': teams_data,
+        'data_count': len(teams_data)
     })
 
 @login_required
