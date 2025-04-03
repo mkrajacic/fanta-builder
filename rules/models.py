@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from teams.models import TeamMember, Team
 
 class Rules(models.Model):
     rule = models.TextField()
@@ -25,14 +26,21 @@ class Occurrence(models.Model):
         default=OutcomeChoices.BONUS
     )
     points = models.PositiveSmallIntegerField(validators=[MinValueValidator(0)], default=1)
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.occurence
 
     def get_occurrences_by_outcome(self, outcome):
         return self.objects.filter(outcome=outcome)
+
+class MemberOccurrence(models.Model):
+    occurrence = models.ForeignKey(Occurrence, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    team_member = models.ForeignKey(TeamMember, on_delete=models.CASCADE)
     
-    def get_occurrences_by_event(self, event_id):
-        return self.objects.filter(event=event_id)
+    class Meta:
+        unique_together = ('occurrence', 'event', 'team_member')
+
+    def __str__(self):
+        return "Occurrence: " + str(self.occurrence) + " for event: " + str(self.event) + " for team member: " + str(self.team_member)
     
