@@ -25,6 +25,7 @@ class Command(BaseCommand):
                     event_details[event_name] = []
                 event_details[event_name].append({
                     "occurrence": singer_occurrence.occurrence.occurrence,
+                    "outcome": singer_occurrence.occurrence.outcome,
                     "points": points
                 })
 
