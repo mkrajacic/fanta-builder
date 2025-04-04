@@ -1,72 +1,67 @@
 from django.core.management.base import BaseCommand
 from teams.models import Team, Singer
 from rules.models import Event
-from results.models import TeamResult
-import json
+from results.models import TeamResult, SingerResult
+from django.db.models import Count
 
 class Command(BaseCommand):
     help = "Make results"
 
     def handle(self, *args, **options):
-        # fetch only teams with valid nr of members and captain selected?
-        all_teams = Team.objects.all()
-        all_events = Event.objects.all()
+        all_singers = Singer.objects.prefetch_related('singeroccurrence_set')
+        for singer in all_singers:
+            total = 0
+            event_details = {}
 
-        for team in all_teams:
-            total_points = 0
-            team_results = {
-                "events": []
-            }
+            for singer_occurrence in singer.singeroccurrence_set.all():
+                points = singer_occurrence.occurrence.points
+                if singer_occurrence.occurrence.outcome == 'PENALTY':
+                    points = -points
+                
+                total += points
+                event_name = singer_occurrence.event.name
 
-            for event in all_events:
-                event_entry = {
-                    "event": event.name,
-                    "member_results": []
+                if event_name not in event_details:
+                    event_details[event_name] = []
+                event_details[event_name].append({
+                    "occurrence": singer_occurrence.occurrence.occurrence,
+                    "points": points
+                })
+
+            SingerResult.objects.update_or_create(
+                singer=singer,
+                defaults={
+                    'total_points': total,
+                    'details': {"scores": event_details}
                 }
-
-                for member in team.teammember_set.all():
-                    singer = Singer.objects.get(pk=member.singer_id)
-                    member_data = {
-                        "singer": singer.name,
-                        "points_assigned_for": [],
-                        "total_for_member": 0
-                    }
-
-                    mo_entries = member.memberoccurrence_set.filter(event=event)
-                    for entry in mo_entries:
-                        occurrence = entry.occurrence
-                        entry_data = {
-                            "title": occurrence.occurence,
-                            "points": occurrence.points,
-                            "type": occurrence.outcome
-                        }
-                        
-                        if occurrence.outcome == 'BONUS':
-                            member_data["total_for_member"] += occurrence.points
-                            total_points += occurrence.points
-                        else:
-                            member_data["total_for_member"] -= occurrence.points
-                            total_points -= occurrence.points
-                            
-                        member_data["points_assigned_for"].append(entry_data)
-
-                    event_entry["member_results"].append(member_data)
-
-                team_results["events"].append(event_entry)
-            
-            self.stdout.write(
-                self.style.SUCCESS(json.dumps(team_results, indent=2))
             )
 
-            try:
-                if TeamResult.objects.filter(team=team).exists():
-                    team_result = TeamResult.objects.get(team=team)
-                    team_result.total_points = total_points
-                    team_result.details = team_results
-                    team_result.save()
-                else:
-                    TeamResult.objects.create(team=team, total_points=total_points, details=team_results)
-            except Exception as e:
-                self.stdout.write(
-                    self.style.ERROR(f"Error while adding team result: {e}")
-                )
+        all_teams = Team.objects.annotate(
+            member_count=Count('teammember')
+        ).filter(
+            member_count__exact=5
+        ).exclude(
+            captain__isnull=True
+        )
+
+        for team in all_teams:
+            team_total = 0
+            member_details = []
+            for member in team.teammember_set.all():
+                singer_result = SingerResult.objects.get(singer=member.singer)
+                team_total += singer_result.total_points
+                member_details.append({
+                    "singer": member.singer.name,
+                    "total": singer_result.total_points,
+                    "scores": singer_result.details.get("scores", {})
+                })
+            
+            TeamResult.objects.update_or_create(
+                team=team,
+                defaults={
+                    'total_points': team_total,
+                    'details': {"members": member_details}
+                }
+            )
+        
+        self.stdout.write(self.style.SUCCESS("Successfully generated results"))

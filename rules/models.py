@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
-from teams.models import TeamMember, Team
+from teams.models import Singer
 
 class Rules(models.Model):
     rule = models.TextField()
@@ -19,7 +19,7 @@ class Occurrence(models.Model):
         BONUS = 'BONUS', 'Bonus' 
         PENALTY = 'PENALTY', 'Penalty'
 
-    occurence = models.TextField()
+    occurrence = models.TextField()
     outcome = models.CharField(
         max_length=10,
         choices=OutcomeChoices.choices, 
@@ -28,19 +28,19 @@ class Occurrence(models.Model):
     points = models.PositiveSmallIntegerField(validators=[MinValueValidator(0)], default=1)
 
     def __str__(self):
-        return self.occurence
+        return self.occurrence
 
     def get_occurrences_by_outcome(self, outcome):
         return self.objects.filter(outcome=outcome)
-
-class MemberOccurrence(models.Model):
+    
+class SingerOccurrence(models.Model):
+    singer = models.ForeignKey(Singer, on_delete=models.CASCADE)
     occurrence = models.ForeignKey(Occurrence, on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    team_member = models.ForeignKey(TeamMember, on_delete=models.CASCADE)
-    
+
     class Meta:
-        unique_together = ('occurrence', 'event', 'team_member')
+        unique_together = ('singer', 'occurrence', 'event')
 
     def __str__(self):
-        return "Occurrence: " + str(self.occurrence) + " for event: " + str(self.event) + " for team member: " + str(self.team_member)
+        return str(self.occurrence) + str(self.singer) + str(self.event)
     

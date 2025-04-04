@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
-from rules.models import Event, Occurrence, MemberOccurrence
-from teams.models import Singer, TeamMember
+from rules.models import Event, Occurrence, SingerOccurrence
+from teams.models import Singer
 
 class Command(BaseCommand):
     help = "Score team members for a thing that happened during a given event"
@@ -14,13 +14,9 @@ class Command(BaseCommand):
 
         try:
             event = Event.objects.get(pk=options["event"])
-        except Event.DoesNotExist:
-            raise CommandError(f'Event {options["event"]} does not exist')
-        
-        try:
             occurrence = Occurrence.objects.get(pk=options["occurrence"])
-        except Occurrence.DoesNotExist:
-            raise CommandError(f'Occurrence {options["occurrence"]} does not exist')
+        except Exception as e:
+            raise CommandError(f'Exception: {e}')
 
         for singer_id in options["singers"]:
             try:
@@ -28,17 +24,14 @@ class Command(BaseCommand):
             except Singer.DoesNotExist:
                 raise CommandError(f'Singer {singer_id} does not exist')
             
-            # fetch only team members from teams with valid nr of members and captain selected?
-            members_to_score = TeamMember.objects.filter(singer=singer_id)
-            member_occurrences = []
-            for member in members_to_score:
-                member_occurrences.append(
-                    MemberOccurrence(occurrence_id=occurrence.id, team_member_id=member.id, event_id=event.id)
-                )
+            singer_occurrences = []
+            singer_occurrences.append(
+                SingerOccurrence(singer=singer, occurrence=occurrence, event=event)
+            )
 
             try:
-                mh = MemberOccurrence.objects.bulk_create(member_occurrences)
+                so = SingerOccurrence.objects.bulk_create(singer_occurrences)
             except Exception as e:
-                raise CommandError(f'Exception {e} while creating member occurrences')
+                raise CommandError(f'Exception {e} while creating singer occurrences')
 
         self.stdout.write(self.style.SUCCESS("Successfully assigned scores"))
