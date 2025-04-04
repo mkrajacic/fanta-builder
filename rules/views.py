@@ -15,13 +15,13 @@ class ShowRules(generic.ListView):
     def get_context_data(self, **kwargs):
         ctx = super(ShowRules, self).get_context_data(**kwargs)
         rules = Rules.objects.all()
-        occurences = Occurrence.objects.all()
+        occurrences = Occurrence.objects.all()
         bonuses = Occurrence.get_occurrences_by_outcome(Occurrence, "BONUS")
         penalties = Occurrence.get_occurrences_by_outcome(Occurrence, "PENALTY")
         
         ctx['rules'] = rules
         ctx['rules_count'] = len(rules)
-        ctx['occurences_count'] = len(occurences)
+        ctx['occurrences_count'] = len(occurrences)
         ctx['bonuses'] = bonuses
         ctx['penalties'] = penalties
         return ctx

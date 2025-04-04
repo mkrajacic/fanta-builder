@@ -25,28 +25,28 @@
         </ul>
     </div>
     <div class="tab-pane fade" id="bonus-tab-pane" role="tabpanel" aria-labelledby="bonus-tab" tabindex="0">
-        <ul class="list-unstyled ps-4 pt-2 occurences-list">
+        <ul class="list-unstyled ps-4 pt-2 occurrences-list">
             {% for bonus_event in bonuses %}
                 <li class="text-light mt-4">
                     <span class="text-success fw-semibold">
                         +{{bonus_event.points}}
                     </span>
                     <span class="ps-1">
-                        {{bonus_event.occurence}}
+                        {{bonus_event.occurrence}}
                     </span>
                 </li>
             {% endfor %}
         </ul>
     </div>
     <div class="tab-pane fade" id="penalty-tab-pane" role="tabpanel" aria-labelledby="penalty-tab" tabindex="0">
-        <ul class="list-unstyled ps-4 pt-2 occurences-list">
+        <ul class="list-unstyled ps-4 pt-2 occurrences-list">
             {% for penalty_event in penalties %}
                 <li class="text-light mt-4">
                     <span class="text-danger fw-semibold">
                         -{{penalty_event.points}}
                     </span>
                     <span class="ps-1">
-                        {{penalty_event.occurence}}
+                        {{penalty_event.occurrence}}
                     </span>
                 </li>
             {% endfor %}
