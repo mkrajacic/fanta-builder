@@ -3,6 +3,7 @@ from teams.models import Team, Singer
 from rules.models import Event
 from results.models import TeamResult, SingerResult
 from django.db.models import Count
+from collections import OrderedDict
 
 class Command(BaseCommand):
     help = "Make results"
@@ -11,19 +12,25 @@ class Command(BaseCommand):
         all_singers = Singer.objects.prefetch_related('singeroccurrence_set')
         for singer in all_singers:
             total = 0
-            event_details = {}
+            event_details = OrderedDict()
 
-            for singer_occurrence in singer.singeroccurrence_set.all():
+            occurrences = singer.singeroccurrence_set.all().order_by('event__id')
+            
+            for singer_occurrence in occurrences:
                 points = singer_occurrence.occurrence.points
                 if singer_occurrence.occurrence.outcome == 'PENALTY':
                     points = -points
                 
                 total += points
+                event_id = singer_occurrence.event.id
                 event_name = singer_occurrence.event.name
 
-                if event_name not in event_details:
-                    event_details[event_name] = []
-                event_details[event_name].append({
+                if event_id not in event_details:
+                    event_details[event_id] = {
+                        "event_name": event_name,
+                        "occurrences": []
+                    }
+                event_details[event_id]["occurrences"].append({
                     "occurrence": singer_occurrence.occurrence.occurrence,
                     "outcome": singer_occurrence.occurrence.outcome,
                     "points": points

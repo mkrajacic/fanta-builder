@@ -27,7 +27,7 @@
                 <div class="card-footer border-0">
                         <h6 class="card-text">Details:</h6>
                         <div class="accordion accordion-flush text-danger" id="accordion-singer-{{ forloop.counter }}">
-                            {% for event_name, occurrences in singer_result.details.scores.items %}
+                            {% for event_id, event_data in singer_result.details.scores.items %}
                                     <div class="accordion-item">
 
                                         <h2 class="accordion-header">
@@ -35,7 +35,7 @@
                                         data-bs-target="#flush-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" 
                                         aria-expanded="false" 
                                         aria-controls="flush-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
-                                            {{ event_name }}
+                                            {{ event_data.event_name }}
                                         </button>
                                         </h2>
             
@@ -44,7 +44,7 @@
                                         data-bs-parent="#accordion-singer-{{ forloop.parentloop.counter }}">
                                             <div class="accordion-body">
                                                 <ul class="list-unstyled ps-4 occurrences-list">
-                                                    {% for occurrence in occurrences %}
+                                                    {% for occurrence in event_data.occurrences %}
                                                         <li class="text-light mt-4">
                                                             <span class="{% if occurrence.outcome == 'BONUS' %}text-success{% else %}text-danger{% endif %} fw-semibold">
                                                                 {% if occurrence.outcome == 'BONUS' %}+{% endif %}{{occurrence.points}}
