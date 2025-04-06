@@ -57,10 +57,13 @@ class Command(BaseCommand):
             member_details = []
             for member in team.teammember_set.all():
                 singer_result = SingerResult.objects.get(singer=member.singer)
-                team_total += singer_result.total_points
+                multiplier = 2 if member.singer == team.captain else 1
+                team_total += singer_result.total_points * multiplier
+
                 member_details.append({
                     "singer": member.singer.name,
-                    "total": singer_result.total_points,
+                    "total": singer_result.total_points * multiplier,
+                    "is_captain": (member.singer == team.captain),
                     "scores": singer_result.details.get("scores", {})
                 })
             
