@@ -16,6 +16,8 @@ from django.db.models import F, Window
 from django.db.models.functions import Rank
 import logging
 logger = logging.getLogger('custom_logger')
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 max_points = settings.MAXIMUM_USABLE_POINTS
 max_slots = settings.MEMBERS_PER_TEAM
@@ -26,7 +28,6 @@ class ResultsSingers(generic.ListView):
     context_object_name = "singer_results"
 
     def get_queryset(self):
-        #singer_results = SingerResult.objects.all()
         singer_results = SingerResult.objects.annotate(
             rank=Window(
                 expression=Rank(),  
@@ -36,3 +37,38 @@ class ResultsSingers(generic.ListView):
         self.queryset = singer_results
         self.extra_context = {"results_count": len(singer_results)}
         return super().get_queryset()
+    
+class ShowLeaderboards(generic.ListView):
+    model = TeamResult
+    template_name = "results/leaderboards.html"
+    context_object_name = 'teams'
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = TeamResult.objects.select_related('team').order_by('-total_points')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+@login_required
+def search(request):
+    search_query = request.GET.get('searchQuery', '')
+    queryset = TeamResult.objects.select_related('team').order_by('-total_points')
+
+    if search_query and len(search_query) >= 3:
+        queryset = queryset.filter(
+            Q(team__name__icontains=search_query) |
+            Q(team__captain__name__icontains=search_query)
+        )
+
+    paginator = Paginator(queryset, 10)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "results/search-results.html", {
+        'teams': page_obj,
+        'search_term': search_query,
+        'page_obj': page_obj,
+    })

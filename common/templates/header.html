@@ -13,7 +13,7 @@
           </li>
         {% endif %}
         <li class="nav-item">
-            <a class="nav-link text-pink-300" href="{% url 'home' %}">Leaderboards</a>
+            <a class="nav-link text-pink-300" href="{% url 'results:leaderboards' %}">Leaderboards</a>
           </li>
         {% if user.is_authenticated %}      
           <li class="nav-item">

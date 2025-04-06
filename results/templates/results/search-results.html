@@ -1,0 +1,107 @@
+<div id="results">
+    {% for result in teams %}
+    <div class="list-group-item leaderboard-item text-light p-4 rounded-3 mb-4 w-50 mx-auto">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col-3">
+                <img src="/uploads/{{result.team.team_image}}" 
+                class="rounded-circle" 
+                style="width:100px;height:100px;object-fit:cover">
+            </div>
+            <div class="col-7">
+                <h4 class="mb-1 text-pink-500">#{{ forloop.counter0|add:page_obj.start_index }}</h4>
+                <h5 class="mb-1">{{ result.team.name }}</h5>
+                <small>Captain: {{ result.team.captain.name }}</small><br>
+                <small class="fst-italic">{{ result.team.user.username }}</small>
+            </div>
+            <div class="col-2">
+                <span class="badge bg-pink-500 rounded-pill fs-5">
+                    {{ result.total_points }} pts
+                </span>
+            </div>
+        </div>
+        
+        {% if result.details.members %}
+            <div x-data="{
+                toggleDetails: false
+            }">
+                    <button class="btn btn-outline-pink-400 w-100 mt-3" type="button" x-on:click="toggleDetails = ! toggleDetails">Show details</button>
+                    <div x-show="toggleDetails" class="mt-2">
+                    {% for singer_result in result.details.members %}
+                        <h5 class="d-inline">{{ singer_result.singer }}</h5>
+                        <small class="text-pink-400">({{ singer_result.total }} points)</small>
+                        <div class="accordion accordion-flush text-danger mb-3 mt-2" id="accordion-singer-{{ forloop.counter }}">
+                            {% for event_id, event_data in singer_result.scores.items %}
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                        data-bs-target="#flush-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" 
+                                        aria-expanded="false" 
+                                        aria-controls="flush-{{ forloop.parentloop.counter }}-{{ forloop.counter }}">
+                                            {{ event_data.event_name }}
+                                        </button>
+                                        </h2>
+            
+                                        <div id="flush-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" 
+                                        class="accordion-collapse collapse" 
+                                        data-bs-parent="#accordion-singer-{{ forloop.parentloop.counter }}">
+                                            <div class="accordion-body">
+                                                <ul class="list-unstyled ps-4 occurrences-list">
+                                                    {% for occurrence in event_data.occurrences %}
+                                                        <li class="text-light mt-4">
+                                                            <span class="{% if occurrence.outcome == 'BONUS' %}text-success{% else %}text-danger{% endif %} fw-semibold">
+                                                                {% if occurrence.outcome == 'BONUS' %}+{% endif %}{{occurrence.points}}
+                                                            </span>
+                                                            <span class="ps-1">
+                                                                {{occurrence.occurrence}}
+                                                            </span>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        </div>
+            
+                                    </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    </div>
+            </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="alert alert-warning">No teams found matching "{{ search_term }}"</div>
+    {% endfor %}
+
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="bg-dark page-link text-pink-400 border-pink-500" 
+                   hx-get="{% url 'results:search' %}?page={{ page_obj.previous_page_number }}&searchQuery={{ search_term }}"
+                   hx-target="#results"
+                   hx-swap="outerHTML">Previous</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item">
+                <a class="{% if page_obj.number == num %}text-pink-100{% else %}text-pink-400{% endif %} bg-dark page-link border-pink-500" 
+                   hx-get="{% url 'results:search' %}?page={{ num }}&searchQuery={{ search_term }}"
+                   hx-target="#results"
+                   hx-swap="outerHTML">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="bg-dark page-link text-pink-400 border-pink-500" 
+                   hx-get="{% url 'results:search' %}?page={{ page_obj.next_page_number }}&searchQuery={{ search_term }}"
+                   hx-target="#results"
+                   hx-swap="outerHTML">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
