@@ -45,25 +45,32 @@ class ShowLeaderboards(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = TeamResult.objects.select_related('team').order_by('-total_points')
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
+        return TeamResult.objects.annotate(
+            display_rank=Window(
+                expression=Rank(),
+                order_by=F('total_points').desc()
+            )
+        ).select_related('team').order_by('-total_points')
     
 @login_required
 def search(request):
     search_query = request.GET.get('searchQuery', '')
-    queryset = TeamResult.objects.select_related('team').order_by('-total_points')
+    base_query = TeamResult.objects.select_related('team').order_by('-total_points')
 
     if search_query and len(search_query) >= 3:
-        queryset = queryset.filter(
+        base_query = base_query.filter(
             Q(team__name__icontains=search_query) |
             Q(team__captain__name__icontains=search_query)
         )
 
-    paginator = Paginator(queryset, 10)
+    ranked_queryset = base_query.annotate(
+        display_rank=Window(
+            expression=Rank(),
+            order_by=F('total_points').desc()
+        )
+    )
+
+    paginator = Paginator(ranked_queryset, 10)
     page_number = request.GET.get('page', 1)
     page_obj = paginator.get_page(page_number)
 
