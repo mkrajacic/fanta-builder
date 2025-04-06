@@ -173,3 +173,12 @@
     border-color: var(--pink-400) !important;
     color: var(--pink-500) !important;
   }
+  
+  .accordion {
+    --bs-accordion-btn-bg: var(--pink-100);
+    --bs-accordion-active-bg: var(--pink-400);
+    --bs-accordion-active-color: #000000;
+    --bs-accordion-bg: rgb(24, 23, 24);
+    --bs-accordion-color: #000000;
+    --bs-accordion-btn-focus-box-shadow: none;
+  }
