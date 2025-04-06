@@ -23,7 +23,7 @@
             </div>
 
             {% if singer_result.details.scores.items %}
-                <div class="card-footer">
+                <div class="card-footer border-0">
                         <h6 class="card-text">Details:</h6>
                         <div class="accordion accordion-flush" id="accordion-singer-{{ forloop.counter }}">
                             {% for event_name, occurrences in singer_result.details.scores.items %}
