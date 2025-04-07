@@ -125,11 +125,14 @@ def add_team(request):
             logger.warning(team_image)
 
             try:
-                if(team_image is not None):
-                    logger.debug("its not none")
-                    team = Team.objects.create(name=name, user=user, team_image=team_image)
+                if not user.reached_team_limit():
+                    if team_image is not None:
+                        team = Team.objects.create(name=name, user=user, team_image=team_image)
+                    else:
+                        team = Team.objects.create(name=name, user=user)
                 else:
-                    team = Team.objects.create(name=name, user=user)
+                    logger.error(f"User has tried to add a new team after surpassing their team limit")
+                    return UtilityFunctions.toastTrigger(request, 204, f"Failed to add team, team limit has been reached!", "error")
             except Exception as e:
                 logger.error(f"Exception while adding team: {e}")
                 return UtilityFunctions.toastTrigger(request, 204, f"Failed to add team", "error")
@@ -195,19 +198,28 @@ def reload_team(request, team_id):
     team = get_object_or_404(Team, pk=team_id)
     team_member_singers = team.get_members_with_singers()
     team_singers_count = len(team_member_singers)
+    
+    data = {}
+    data['team'] = team
+    data['singers'] = team_member_singers
+    data['singers_count'] = team_singers_count
+    data['max_points'] = max_points
+    data['max_slots'] = max_slots
+    
+    is_htmx = request.headers.get('HX-Request') == 'true'
+    if is_htmx:
+        user_teams = request.user.team_set.all()
+        data['data_count'] = len(user_teams)
+        data['max_teams'] = max_teams,
+        
+    data['is_htmx'] = is_htmx
 
-    return render(request, "teams/team.html", {
-        'team': team,
-        'singers': team_member_singers,
-        'singers_count': team_singers_count,
-        "max_points": max_points,
-        "max_slots": max_slots,
-    })
+    return render(request, "teams/team.html", data)
 
 @login_required
 def reload_teams(request):
     user_teams = request.user.team_set.all()
-
+    
     teams_data = []
     for team in user_teams:
         team_member_singers = team.get_members_with_singers()
@@ -217,11 +229,18 @@ def reload_teams(request):
             'singers': team_member_singers,
             'singers_count': team_singers_count
         })
-
-    return render(request, "teams/show-teams.html", {
-        'data': teams_data,
-        'data_count': len(teams_data)
-    })
+    
+    data = {}
+    data['data'] = teams_data
+        
+    is_htmx = request.headers.get('HX-Request') == 'true'
+    if is_htmx:
+        data['max_teams'] = max_teams
+        data['data_count'] = len(teams_data)
+        
+    data['is_htmx'] = is_htmx
+    
+    return render(request, "teams/show-teams.html", data)
 
 @login_required
 def delete_team(request, team_id):
