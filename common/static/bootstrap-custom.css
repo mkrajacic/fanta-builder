@@ -1,34 +1,35 @@
 :root {
-    --pink-100: #fff0f6; 
-    --pink-200: #ffd6e8;
-    --pink-300: #ffadd2;
-    --pink-400: #ff85c0;
-    --pink-500: #f759ab; 
+    --custom-100: #fff7ed; 
+    --custom-200: #ffedd5;
+    --custom-300: #fed7aa;
+    --custom-400: #fdba74;
+    --custom-500: #f97316; 
+    --custom-shadow: 0 0.5rem 1rem var(--custom-200);
   }
   
-  .bg-pink-100 { background-color: var(--pink-100) !important; }
-  .bg-pink-200 { background-color: var(--pink-200) !important; }
-  .bg-pink-300 { background-color: var(--pink-300) !important; }
-  .bg-pink-400 { background-color: var(--pink-400) !important; }
-  .bg-pink-500 { background-color: var(--pink-500) !important; }
+  .bg-custom-100 { background-color: var(--custom-100) !important; }
+  .bg-custom-200 { background-color: var(--custom-200) !important; }
+  .bg-custom-300 { background-color: var(--custom-300) !important; }
+  .bg-custom-400 { background-color: var(--custom-400) !important; }
+  .bg-custom-500 { background-color: var(--custom-500) !important; }
   
-  .text-pink-100 { color: var(--pink-100) !important; }
-  .text-pink-200 { color: var(--pink-200) !important; }
-  .text-pink-300 { color: var(--pink-300) !important; }
-  .text-pink-400 { color: var(--pink-400) !important; }
-  .text-pink-500 { color: var(--pink-500) !important; }
+  .text-custom-100 { color: var(--custom-100) !important; }
+  .text-custom-200 { color: var(--custom-200) !important; }
+  .text-custom-300 { color: var(--custom-300) !important; }
+  .text-custom-400 { color: var(--custom-400) !important; }
+  .text-custom-500 { color: var(--custom-500) !important; }
   
-  .hover-bg-pink-100:hover { background-color: var(--pink-100) !important; }
-  .hover-text-pink-100:hover { color: var(--pink-100) !important; }
+  .hover-bg-custom-100:hover { background-color: var(--custom-100) !important; }
+  .hover-text-custom-100:hover { color: var(--custom-100) !important; }
 
 .nav-link.active {
-    color: var(--pink-100) !important;
-    border-color: var(--pink-400) !important;
+    color: var(--custom-100) !important;
+    border-color: var(--custom-400) !important;
   }
   
   .btn.active {
-    background-color: var(--pink-400) !important;
-    border-color: var(--pink-500) !important;
+    background-color: var(--custom-400) !important;
+    border-color: var(--custom-500) !important;
     color: white !important;
   }
 
@@ -36,147 +37,143 @@
   transition: all 0.2s ease-in-out;
 }
 
-.btn-pink-100 {
-  background-color: var(--pink-100) !important;
-  color: var(--pink-500) !important;
-  border-color: var(--pink-100) !important;
+.btn-custom-100 {
+  background-color: var(--custom-100) !important;
+  color: var(--custom-500) !important;
+  border-color: var(--custom-100) !important;
 }
-.btn-pink-100:hover {
-  background-color: var(--pink-200) !important;
-  border-color: var(--pink-200) !important;
-}
-
-.btn-pink-200 {
-  background-color: var(--pink-200) !important;
-  color: var(--pink-500) !important;
-  border-color: var(--pink-200) !important;
-}
-.btn-pink-200:hover {
-  background-color: var(--pink-300) !important;
+.btn-custom-100:hover {
+  background-color: var(--custom-200) !important;
+  border-color: var(--custom-200) !important;
 }
 
-.btn-pink-300 {
-  background-color: var(--pink-300) !important;
+.btn-custom-200 {
+  background-color: var(--custom-200) !important;
+  color: var(--custom-500) !important;
+  border-color: var(--custom-200) !important;
+}
+.btn-custom-200:hover {
+  background-color: var(--custom-300) !important;
+}
+
+.btn-custom-300 {
+  background-color: var(--custom-300) !important;
   color: white !important;
-  border-color: var(--pink-300) !important;
+  border-color: var(--custom-300) !important;
 }
-.btn-pink-300:hover {
-  background-color: var(--pink-400) !important;
-}
-
-.btn-pink-400 {
-  background-color: var(--pink-400) !important;
-  color: white !important;
-  border-color: var(--pink-400) !important;
-}
-.btn-pink-400:hover {
-  background-color: var(--pink-500) !important;
+.btn-custom-300:hover {
+  background-color: var(--custom-400) !important;
 }
 
-.btn-pink-500 {
-  background-color: var(--pink-500) !important;
+.btn-custom-400 {
+  background-color: var(--custom-400) !important;
   color: white !important;
-  border-color: var(--pink-500) !important;
+  border-color: var(--custom-400) !important;
 }
-.btn-pink-500:hover {
+.btn-custom-400:hover {
+  background-color: var(--custom-500) !important;
+}
+
+.btn-custom-500 {
+  background-color: var(--custom-500) !important;
+  color: white !important;
+  border-color: var(--custom-500) !important;
+}
+.btn-custom-500:hover {
   filter: brightness(90%);
 }
 
-.btn-outline-pink-500 {
-  color: var(--pink-500) !important;
-  border-color: var(--pink-500) !important;
+.btn-outline-custom-500 {
+  color: var(--custom-500) !important;
+  border-color: var(--custom-500) !important;
   background-color: transparent !important;
 }
-.btn-outline-pink-500:hover {
-  background-color: var(--pink-500) !important;
+.btn-outline-custom-500:hover {
+  background-color: var(--custom-500) !important;
   color: white !important;
 }
 
-.btn-outline-pink-400 {
-  color: var(--pink-400) !important;
-  border-color: var(--pink-400) !important;
+.btn-outline-custom-400 {
+  color: var(--custom-400) !important;
+  border-color: var(--custom-400) !important;
 }
-.btn-outline-pink-400:hover {
-  background-color: var(--pink-400) !important;
+.btn-outline-custom-400:hover {
+  background-color: var(--custom-400) !important;
   color: white !important;
 }
 
-.btn-pink-500:active,
-.btn-pink-500.active {
-  background-color: var(--pink-400) !important;
-  border-color: var(--pink-500) !important;
-  box-shadow: 0 0 0 0.25rem rgba(247, 89, 171, 0.5) !important;
+.btn-custom-500:active,
+.btn-custom-500.active {
+  background-color: var(--custom-400) !important;
+  border-color: var(--custom-500) !important;
+  box-shadow: 0 0 0 var(--custom-300) !important;
 }
 
-.btn-pink-500:focus {
-  box-shadow: 0 0 0 0.25rem rgba(247, 89, 171, 0.5) !important;
+.btn-custom-500:focus {
+  box-shadow: 0 0 0 var(--custom-300) !important;
 }
 
-.btn-pink-500:disabled {
-  background-color: var(--pink-300) !important;
-  border-color: var(--pink-300) !important;
+.btn-custom-500:disabled {
+  background-color: var(--custom-300) !important;
+  border-color: var(--custom-300) !important;
   opacity: 0.7 !important;
 }
 
-.btn-gradient-pink {
+.btn-gradient-custom {
   background: linear-gradient(
     45deg,
-    var(--pink-400),
-    var(--pink-500)
+    var(--custom-400),
+    var(--custom-500)
   ) !important;
   color: white !important;
   border: none !important;
 }
-.btn-gradient-pink:hover {
+.btn-gradient-custom:hover {
   background: linear-gradient(
     45deg,
-    var(--pink-500),
-    var(--pink-400)
+    var(--custom-500),
+    var(--custom-400)
   ) !important;
 }
 
-:root {
-  --pink-shadow: 0 0.5rem 1rem rgba(247, 89, 171, 0.15);
+.border-custom-500 {
+  --bs-border-opacity: 1;
+  border-color: var(--custom-500) !important;
 }
 
-.border-pink-500 {
+.border-custom-400 {
   --bs-border-opacity: 1;
-  border-color: var(--pink-500) !important;
+  border-color: var(--custom-400) !important;
 }
 
-.border-pink-400 {
+.border-custom-300 {
   --bs-border-opacity: 1;
-  border-color: var(--pink-400) !important;
+  border-color: var(--custom-300) !important;
 }
 
-.border-pink-300 {
+.border-custom-200 {
   --bs-border-opacity: 1;
-  border-color: var(--pink-300) !important;
+  border-color: var(--custom-200) !important;
 }
 
-.border-pink-200 {
+.border-custom-100 {
   --bs-border-opacity: 1;
-  border-color: var(--pink-200) !important;
-}
-
-.border-pink-100 {
-  --bs-border-opacity: 1;
-  border-color: var(--pink-100) !important;
+  border-color: var(--custom-100) !important;
 }
   
   .nav-link.active:hover {
-    border-color: var(--pink-300) !important;
+    border-color: var(--custom-300) !important;
   }
   
   .list-group-item.active {
-    background-color: var(--pink-300) !important;
-    border-color: var(--pink-400) !important;
-    color: var(--pink-500) !important;
+    background-color: var(--custom-300) !important;
+    border-color: var(--custom-400) !important;
+    color: var(--custom-500) !important;
   }
   
   .accordion {
-    --bs-accordion-btn-bg: var(--pink-100);
-    --bs-accordion-active-bg: var(--pink-400);
+    --bs-accordion-btn-bg: var(--custom-100);
+    --bs-accordion-active-bg: var(--custom-400);
     --bs-accordion-active-color: #000000;
     --bs-accordion-bg: rgb(24, 23, 24);
     --bs-accordion-color: #000000;

@@ -1,17 +1,17 @@
 {% extends "default.html" %}
 {% block content %}
 {% if rules_count == 0 %}
-    <p class="text-pink-300 mb-2">No rules available</p>
+    <p class="text-custom-300 mb-2">No rules available</p>
 {% else %}
 <ul class="nav nav-tabs fs-5 font-monospace" id="ruleTabs" role="tablist">
     <li class="nav-item" role="presentation">
-      <button class="text-pink-500 btn-outline-pink-500 active" id="rules-tab" data-bs-toggle="tab" data-bs-target="#rules-tab-pane" type="button" role="tab" aria-controls="rules-tab-pane" aria-selected="true">Rules</button>
+      <button class="text-custom-500 btn-outline-custom-500 active" id="rules-tab" data-bs-toggle="tab" data-bs-target="#rules-tab-pane" type="button" role="tab" aria-controls="rules-tab-pane" aria-selected="true">Rules</button>
     </li>
     <li class="nav-item ps-2" role="presentation">
-      <button class="text-pink-500 btn-outline-pink-500" id="bonus-tab" data-bs-toggle="tab" data-bs-target="#bonus-tab-pane" type="button" role="tab" aria-controls="bonus-tab-pane" aria-selected="false">Bonuses</button>
+      <button class="text-custom-500 btn-outline-custom-500" id="bonus-tab" data-bs-toggle="tab" data-bs-target="#bonus-tab-pane" type="button" role="tab" aria-controls="bonus-tab-pane" aria-selected="false">Bonuses</button>
     </li>
     <li class="nav-item ps-2" role="presentation">
-        <button class="text-pink-500 btn-outline-pink-500" id="penalty-tab" data-bs-toggle="tab" data-bs-target="#penalty-tab-pane" type="button" role="tab" aria-controls="penalty-tab-pane" aria-selected="false">Penalties</button>
+        <button class="text-custom-500 btn-outline-custom-500" id="penalty-tab" data-bs-toggle="tab" data-bs-target="#penalty-tab-pane" type="button" role="tab" aria-controls="penalty-tab-pane" aria-selected="false">Penalties</button>
     </li>
 </ul>
   <div class="tab-content" id="ruleTabContent">

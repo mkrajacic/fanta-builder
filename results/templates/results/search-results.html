@@ -8,7 +8,7 @@
                 style="width:100px;height:100px;object-fit:cover">
             </div>
             <div class="col-7">
-                <h4 class="mb-1 text-pink-500">#{{ result.display_rank }}</h4>
+                <h4 class="mb-1 text-custom-500">#{{ result.display_rank }}</h4>
                 <h5 class="mb-1">{{ result.team.name }}</h5>
                 <div>
                     <div class="d-inline-flex align-items-center gap-2">
@@ -32,7 +32,7 @@
                 </div>
             </div>
             <div class="col-2">
-                <span class="badge bg-pink-500 rounded-pill fs-5">
+                <span class="badge bg-custom-500 rounded-pill fs-5">
                     {{ result.total_points }} pts
                 </span>
             </div>
@@ -42,11 +42,11 @@
             <div x-data="{
                 toggleDetails: false
             }">
-                    <button class="btn btn-outline-pink-400 w-100 mt-3" type="button" x-on:click="toggleDetails = ! toggleDetails">Show details</button>
+                    <button class="btn btn-outline-custom-400 w-100 mt-3" type="button" x-on:click="toggleDetails = ! toggleDetails">Show details</button>
                     <div x-show="toggleDetails" class="mt-2">
                     {% for singer_result in result.details.members %}
                         <h5 class="d-inline">{{ singer_result.singer }}</h5>
-                        <small class="text-pink-400">({{ singer_result.total }} points)</small>
+                        <small class="text-custom-400">({{ singer_result.total }} points)</small>
                         <div class="accordion accordion-flush text-danger mb-3 mt-2" id="accordion-singer-{{ forloop.counter }}">
                             {% for event_id, event_data in singer_result.scores.items %}
                                     <div class="accordion-item">
@@ -95,7 +95,7 @@
         <ul class="pagination justify-content-center">
             {% if page_obj.has_previous %}
             <li class="page-item">
-                <a class="bg-dark page-link text-pink-400 border-pink-500" 
+                <a class="bg-dark page-link text-custom-400 border-custom-500" 
                    hx-get="{% url 'results:search' %}?page={{ page_obj.previous_page_number }}&searchQuery={{ search_term }}"
                    hx-target="#results"
                    hx-swap="outerHTML">Previous</a>
@@ -104,7 +104,7 @@
 
             {% for num in page_obj.paginator.page_range %}
             <li class="page-item">
-                <a class="{% if page_obj.number == num %}text-pink-100{% else %}text-pink-400{% endif %} bg-dark page-link border-pink-500" 
+                <a class="{% if page_obj.number == num %}text-custom-100{% else %}text-custom-400{% endif %} bg-dark page-link border-custom-500" 
                    hx-get="{% url 'results:search' %}?page={{ num }}&searchQuery={{ search_term }}"
                    hx-target="#results"
                    hx-swap="outerHTML">{{ num }}</a>
@@ -113,7 +113,7 @@
 
             {% if page_obj.has_next %}
             <li class="page-item">
-                <a class="bg-dark page-link text-pink-400 border-pink-500" 
+                <a class="bg-dark page-link text-custom-400 border-custom-500" 
                    hx-get="{% url 'results:search' %}?page={{ page_obj.next_page_number }}&searchQuery={{ search_term }}"
                    hx-target="#results"
                    hx-swap="outerHTML">Next</a>

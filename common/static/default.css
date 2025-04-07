@@ -1,50 +1,51 @@
 .mic-logo {
-    width:40px;
-    height:40px;
-    color:var(--pink-400);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
+  width: 40px;
+  height: 40px;
+  color: var(--custom-400);
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
 }
 
 .form-auth {
-    max-width: 330px;
-    padding: 1rem;
-    margin: 0 auto;
-  }
-  
-  .form-auth .form-floating:focus-within {
-    z-index: 2;
-  }
+  max-width: 330px;
+  padding: 1rem;
+  margin: 0 auto;
+}
 
-  .form-control:focus {
-    box-shadow: 0 0 0 3px rgba(255, 121, 161, 0.25);
-    border-color: #ff85c0;
-  }
+.form-auth .form-floating:focus-within {
+  z-index: 2;
+}
 
-  .captain-alert {
-    width: 60% !important;
-  }
+.form-control:focus {
+  box-shadow: 0 0 0 3px var(--custom-300);
+  border-color: var(--custom-500);
+}
 
-  .rules-list li {
-    list-style-type: none;
-    background: url('star.svg') left center no-repeat; 
-    padding-left: 35px;
-  }
+.captain-alert {
+  width: 60% !important;
+}
 
-  .occurrences-list li {
-    padding-left: 10px;
-  }
+.rules-list li {
+  list-style-type: none;
+  background: url('star-filled.svg') left center no-repeat;
+  padding-left: 35px;
+}
 
-  .singer-card {
-    background-color: #343b43 !important;
-  }
+.occurrences-list li {
+  padding-left: 10px;
+}
 
-  .captain-div svg {
-    width: 40px;
-    height: 40px;
-  }
+.singer-card {
+  background-color: #343b43 !important;
+}
 
-  .leaderboard-item {
-    background-color: #343b43 !important;
-    border: 1px solid var(--pink-500) !important;
-  }
+.captain-div svg {
+  width: 40px;
+  height: 40px;
+  color: var(--custom-400);
+}
+
+.leaderboard-item {
+  background-color: #343b43 !important;
+  border: 1px solid var(--custom-500) !important;
+}

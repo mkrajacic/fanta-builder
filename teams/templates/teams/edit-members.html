@@ -65,11 +65,11 @@
   <div class="modal-body p-3">
     <div class="d-flex justify-content-between mb-3">
       <div>
-        <span class="fw-bold">Points available: <span x-text="remainingPoints" class="text-pink-500"></span></span>
+        <span class="fw-bold">Points available: <span x-text="remainingPoints" class="text-custom-500"></span></span>
       </div>
       <div>
         <span class="fw-bold">Members selected: <span x-text="membersSelectedCount + '/' + maxSlots"
-            class="text-pink-500"></span></span>
+            class="text-custom-500"></span></span>
       </div>
     </div>
     <form hx-post="{{ request.path }}" id="membersForm" @submit.prevent="{}">
@@ -87,7 +87,7 @@
           style="min-height: 100px; cursor: pointer; overflow-y: auto;">
           <div class="d-flex flex-wrap gap-2 p-2">
             <template x-for="singer in selectedSingers" :key="singer.id">
-              <div class="badge bg-pink-400 d-flex align-items-center gap-2">
+              <div class="badge bg-custom-400 d-flex align-items-center gap-2">
                 <template x-if="singer.image">
                   <img :src="`/uploads/${singer.image}`" class="rounded-circle"
                     style="width:24px;height:24px;object-fit:cover">
@@ -115,7 +115,7 @@
           <div class="card-body p-2">
             <template x-for="singer in singers" :key="singer.id">
               <div class="d-flex align-items-center gap-3 p-2 hover-bg" :class="{ 
-                     'bg-pink-200': isSelected(singer.id),
+                     'bg-custom-200': isSelected(singer.id),
                      'opacity-25': !isSelected(singer.id) && insufficientPoints(singer.cost),
                      'pe-none': !isSelected(singer.id) && insufficientPoints(singer.cost)
                    }" @click="toggleSelection(singer.id)" :style="{
@@ -131,7 +131,7 @@
                 </div>
                 <div class="ms-auto">
                   <span x-text="singer.cost + ' points'"></span>
-                  <span x-show="isSelected(singer.id)" class="ms-2 text-pink-500 fw-bold"><svg
+                  <span x-show="isSelected(singer.id)" class="ms-2 text-custom-500 fw-bold"><svg
                       xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                       <g fill="none" fill-rule="evenodd">
                         <path
@@ -162,13 +162,13 @@
   </div>
 
   <div class="modal-footer">
-    <div class="alert bg-pink-100 captain-alert" role="alert" x-show="teamFilled && !captainSelected">
+    <div class="alert bg-custom-100 captain-alert" role="alert" x-show="teamFilled && !captainSelected">
       To confirm selection, choose a team captain
     </div>
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
     <button hx-post="{{form_action}}" hx-include="#membersForm" hx-swap="innerHTML"
       :disabled="!withinMaxPoints || !teamFilled || !captainSelected" class="btn"
-      :class="(!withinMaxPoints || !teamFilled || !captainSelected) ? 'btn-outline-secondary' : 'btn-pink-400'">
+      :class="(!withinMaxPoints || !teamFilled || !captainSelected) ? 'btn-outline-secondary' : 'btn-custom-400'">
       Confirm
     </button>
   </div>
