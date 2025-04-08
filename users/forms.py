@@ -12,7 +12,7 @@ class UserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ("username", "email", "image")
+        fields = ("username", "image")
 
 class UserRegisterForm(UserCreationForm):
     class Meta:
