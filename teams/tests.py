@@ -4,8 +4,63 @@ from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
 from common import TestFunctions
+from django.test import RequestFactory
+from django.urls import reverse
+from teams import views
+from .models import Team
+from django.contrib.auth import get_user_model
+User=get_user_model()
+from django.contrib.auth.models import AnonymousUser
+from unittest.mock import patch, MagicMock
+import logging
+logger = logging.getLogger('custom_logger')
+
+class TeamListViewTests(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get(reverse('teams:index'))
+        self.view = views.ShowTeams()
+        self.view.setup(self.request)
+
+    def test_show_teams_authorized(self):
+        user = TestFunctions.add_user("mk")
+        self.request.user = user
+        response = views.ShowTeams.as_view()(self.request)
+        self.assertEqual(response.status_code, 200)
+
+    def test_show_teams_unauthorized(self):
+        self.request.user = AnonymousUser()
+        response = views.ShowTeams.as_view()(self.request)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('unauthorized', response.headers.get('Location'))
+
+    """def test_get_queryset_exception_handling(self):
+        user = TestFunctions.add_user("mk")
+        self.request.user = user
+        self.client.force_login(user)
+
+        with patch.object(user.team_set, 'all', side_effect=Exception('Test error')):
+            response = self.client.get(reverse('teams:index')) 
+
+            self.assertEqual(response.status_code, 200)
+            self.assertQuerySetEqual(response.context['data'], Team.objects.none())
+
+        with self.assertLogs('custom_logger', level="ERROR") as cm:
+            self.assertEqual(cm.output, "d")"""
+
+class SingerListViewTests(TestCase):
+    def setUp(self):
+        self.request = RequestFactory().get(reverse('singers'))
+        self.view = views.ShowSingers()
+        self.view.setup(self.request)
+
+    def test_show_singers_unauthorized(self):
+        self.request.user = AnonymousUser()
+        self.view.setup(self.request)
+        response = views.ShowSingers.as_view()(self.request)
+        self.assertEqual(response.status_code, 200)
 
 class TeamModelTests(TestCase):
+
     def test_surpassed_member_limit(self):
         user = TestFunctions.add_user("mk")
         team = TestFunctions.add_team("test team", user.id)
