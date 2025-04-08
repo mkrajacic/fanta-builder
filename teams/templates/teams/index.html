@@ -1,17 +1,22 @@
 {% extends "default.html" %}
 {% block content %}
-<div id="addTeam" class="float-end" x-data="{
-    teamsCount: {{data_count}},
-    maxTeams: {{max_teams}},
-    get reachedTeamLimit() {
-        let dataTeamCount = document.getElementById('addTeamButton').getAttribute('data-teamcount');
-        return Number(this.teamsCount) >= Number(this.maxTeams) || Number(dataTeamCount) >= Number(this.maxTeams);
-    }
-}">
-    <button id="addTeamButton" data-teamcount="{{data_count}}" :disabled="reachedTeamLimit" class="btn btn-custom-400"
-        type="button" hx-get="{% url 'teams:add-team' %}" hx-target="#teamsDialog">Add
-        team</button>
-</div>
+
+{% if not teams_readonly %}
+    <div id="addTeam" class="float-end" x-data="{
+        teamsCount: {{data_count}},
+        maxTeams: {{max_teams}},
+        get reachedTeamLimit() {
+            let dataTeamCount = document.getElementById('addTeamButton').getAttribute('data-teamcount');
+            return Number(this.teamsCount) >= Number(this.maxTeams) || Number(dataTeamCount) >= Number(this.maxTeams);
+        }
+    }">
+        <button id="addTeamButton" data-teamcount="{{data_count}}" :disabled="reachedTeamLimit" class="btn btn-custom-400"
+            type="button" hx-get="{% url 'teams:add-team' %}" hx-target="#teamsDialog">Add
+            team
+        </button>
+    </div>
+{% endif %}
+
 {% if data_count == 0 %}
 <p class="text-custom-300 mb-2">No teams available</p>
 {% else %}
@@ -21,15 +26,17 @@
 </div>
 {% endif %}
 
-<div id="membersModal" class="modal fade">
-    <div id="membersDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
-</div>
-<div id="teamsModal" class="modal fade">
-    <div id="teamsDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
-</div>
-
-{% block add_script %}
-{% load static %}
-<script src="{% static 'htmlx-interactive.js' %}"></script>
-{% endblock add_script %}
+{% if not teams_readonly %}
+    <div id="membersModal" class="modal fade">
+        <div id="membersDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+    </div>
+    <div id="teamsModal" class="modal fade">
+        <div id="teamsDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+    </div>
+    
+    {% block add_script %}
+    {% load static %}
+    <script src="{% static 'htmlx-interactive.js' %}"></script>
+    {% endblock add_script %}
+{% endif %}
 {% endblock content %}

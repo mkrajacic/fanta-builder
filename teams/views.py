@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Team, Singer, TeamMember
+from results.models import TeamResult
 from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
@@ -19,29 +20,59 @@ logger = logging.getLogger('custom_logger')
 max_points = settings.MAXIMUM_USABLE_POINTS
 max_slots = settings.MEMBERS_PER_TEAM
 max_teams = settings.MAXIMUM_TEAMS_PER_USER
+teams_readonly = settings.TEAMS_READONLY
 
 class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "teams/index.html"
 
     def get_queryset(self):
-        return self.request.user.team_set.all()
+        try:
+            return self.request.user.team_set.all()
+        except Exception as e:
+            logger.error(f"Exception while fetching user team data: {e}")
+            return self.request.user.team_set.none()
     
     def get_context_data(self, **kwargs):
         ctx = super(ShowTeams, self).get_context_data(**kwargs)
-        user_teams = self.request.user.team_set.all()
-        teams_data = []
-        for team in user_teams:
-            team_member_singers = team.get_members_with_singers()
-            team_singers_count = len(team_member_singers)
-            teams_data.append({
-                'team': team,
-                'singers': team_member_singers,
-                'singers_count': team_singers_count
-            })
-        
-        ctx['data'] = teams_data
-        ctx['data_count'] = len(teams_data)
-        ctx['max_teams'] = max_teams
+
+        try:
+            user_teams = self.request.user.team_set.all()
+            teams_data = []
+            for team in user_teams:
+                team_member_singers = team.get_members_with_singers()
+                team_singers_count = len(team_member_singers)
+
+                team_data = {}
+                team_data['team'] = team
+                team_data['singers'] = team_member_singers
+                team_data['singers_count'] = team_singers_count
+
+                if teams_readonly:
+                    team_results_dict = {}
+                    try:
+                        team_results = get_object_or_404(TeamResult, team_id=team.id)
+                        team_results_dict = {
+                            "total_points": team_results.total_points,
+                            "details": team_results.details
+                        }
+                    except Exception as e:
+                        logger.error(f"Exception while fetching user team results: {e}")
+
+                    team_data['team_results'] = team_results_dict
+
+                teams_data.append(team_data)
+            
+            ctx['data'] = teams_data
+            ctx['data_count'] = len(teams_data)
+            ctx['max_teams'] = max_teams
+            ctx['teams_readonly'] = teams_readonly
+        except Exception as e:
+            logger.error(f"Exception while fetching user team data with context: {e}")
+            ctx['data'] = []
+            ctx['data_count'] = 0
+            ctx['max_teams'] = 0
+            ctx['teams_readonly'] = teams_readonly
+
         return ctx
     
 class ShowSingers(generic.ListView):
@@ -116,13 +147,11 @@ def add_team(request):
 
     if request.method == "POST":
         form = TeamForm(request.POST, request.FILES)
-        logger.debug(request.FILES)
 
         if form.is_valid():
             name = form.cleaned_data["name"]
             team_image = form.cleaned_data["team_image"]
             user = request.user
-            logger.warning(team_image)
 
             try:
                 if not user.reached_team_limit():
@@ -146,7 +175,6 @@ def add_team(request):
             })
 
     else:
-        logger.debug("its not post")
         form = TeamForm()
     
         return render(request, "teams/edit-team.html", {
@@ -162,8 +190,6 @@ def edit_team(request, team_id):
 
     if request.method == "POST":
         form = TeamForm(request.POST, request.FILES, instance=team)
-        logger.debug("before cleaned data")
-        logger.debug(request.FILES)
 
         if form.is_valid():
 

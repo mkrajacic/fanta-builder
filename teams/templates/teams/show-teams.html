@@ -2,23 +2,27 @@
 {% with team=team_information.team %}
 {% with singers_count=team_information.singers_count %}
 {% with singers=team_information.singers %}
+{% with team_results=team_information.team_results %}
 {% include "teams/team.html" %}
+{% endwith %}
 {% endwith %}
 {% endwith %}
 {% endwith %}
 {% endfor %}
 
-{% if is_htmx %}
-    <div hx-swap-oob="true" id="addTeam" class="float-end" x-data="{
-        teamsCount: {{data_count}},
-        maxTeams: {{max_teams}},
-        get reachedTeamLimit() {
-            let dataTeamCount = document.getElementById('addTeamButton').getAttribute('data-teamcount');
-            return Number(this.teamsCount) >= Number(this.maxTeams) || Number(dataTeamCount) >= Number(this.maxTeams);
-        }
-    }">
-        <button id="addTeamButton" data-teamcount="{{data_count}}" :disabled="reachedTeamLimit" class="btn btn-custom-400"
-            type="button" hx-get="{% url 'teams:add-team' %}" hx-target="#teamsDialog">Add
-            team</button>
-    </div>
+{% if not teams_readonly %}
+    {% if is_htmx %}
+        <div hx-swap-oob="true" id="addTeam" class="float-end" x-data="{
+            teamsCount: {{data_count}},
+            maxTeams: {{max_teams}},
+            get reachedTeamLimit() {
+                let dataTeamCount = document.getElementById('addTeamButton').getAttribute('data-teamcount');
+                return Number(this.teamsCount) >= Number(this.maxTeams) || Number(dataTeamCount) >= Number(this.maxTeams);
+            }
+        }">
+            <button id="addTeamButton" data-teamcount="{{data_count}}" :disabled="reachedTeamLimit" class="btn btn-custom-400"
+                type="button" hx-get="{% url 'teams:add-team' %}" hx-target="#teamsDialog">Add
+                team</button>
+        </div>
+    {% endif %}
 {% endif %}
