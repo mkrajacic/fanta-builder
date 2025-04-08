@@ -6,8 +6,8 @@
             {% if user.is_authenticated %}
                 <li class="nav-item"><a href="{% url 'results:results-singers' %}" class="nav-link px-2 text-dark fw-semibold">Results</a></li>
                 <li class="nav-item"><a href="{% url 'teams:index' %}" class="nav-link px-2 text-dark fw-semibold">My teams</a></li>
+                <li class="nav-item"><a href="{% url 'results:leaderboards' %}" class="nav-link px-2 text-dark fw-semibold">Leaderboards</a></li>
             {% endif %}
-            <li class="nav-item"><a href="{% url 'results:leaderboards' %}" class="nav-link px-2 text-dark fw-semibold">Leaderboards</a></li>
             {% if not user.is_authenticated %}
                 <li class="nav-item"><a href="{% url "users:register" %}" class="nav-link px-2 text-dark fw-semibold">Sign up</a></li>
             {% endif %}
