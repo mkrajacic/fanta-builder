@@ -45,12 +45,15 @@ class ShowLeaderboards(generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return TeamResult.objects.annotate(
+        leaderboards_data = TeamResult.objects.annotate(
             display_rank=Window(
                 expression=Rank(),
                 order_by=F('total_points').desc()
             )
         ).select_related('team').order_by('-total_points')
+        self.queryset = leaderboards_data
+        self.extra_context = {"leaderboard_count": len(leaderboards_data)}
+        return super().get_queryset()
     
 @login_required
 def search(request):

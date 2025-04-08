@@ -2,21 +2,26 @@
 
 {% block content %}
 <div class="container">
-    <form method="get" class="mb-4">
-        <div class="input-group">
-            <input name="searchQuery" 
-                   placeholder="Search team" 
-                   hx-get="{% url 'results:search' %}" 
-                   hx-target="#results"
-                   hx-swap="outerHTML" 
-                   hx-trigger="input changed delay:500ms"
-                   class="form-control">
-        </div>
-    </form>
-    
-    <div id="results">
-        {% include 'results/search-results.html' %}
-    </div>
 
+    {% if leaderboard_count == 0 %}
+        <p class="text-custom-300 mb-2">No data available</p>
+    {% else %}
+        <form method="get" class="mb-4">
+            <div class="input-group">
+                <input name="searchQuery" 
+                    placeholder="Search team" 
+                    hx-get="{% url 'results:search' %}" 
+                    hx-target="#results"
+                    hx-swap="outerHTML" 
+                    hx-trigger="input changed delay:500ms"
+                    class="form-control">
+            </div>
+        </form>
+        
+        <div id="results">
+            {% include 'results/search-results.html' %}
+        </div>
+    {% endif %}
+            
 </div>
 {% endblock %}
