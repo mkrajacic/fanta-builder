@@ -3,7 +3,7 @@
       <div class="card border-custom-400 profile-div text-light">
         <div class="card-body text-center">
           <h3 class="card-title text-custom-100 font-monospace">{{user.username}}</h3>
-          <img src="{{user.image.url}}" class="rounded" id="profileImg">
+          <img src="{{user.image.url}}" class="rounded w-75" id="profileImg">
         </div>
         <button class="btn btn-outline-light w-75 mx-auto mb-3"
         type="button" hx-get="{% url 'edit-profile' user.id %}" hx-target="#userDialog">Update</button>
