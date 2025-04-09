@@ -55,6 +55,8 @@
 
                 </ul>
 
+        {% endif %}
+
                 <div class="card-body">
                         <a href="#" class="card-link btn btn-outline-dark" hx-get="{% url 'teams:edit-team' team.id %}"
                                 hx-target="#teamsDialog">Edit team</a>
@@ -96,8 +98,6 @@
             team</button>
     </div>
     {% endif %}
-
-{% endif %}
 
 {% else %}
 

@@ -13,11 +13,11 @@
     </div>
 
     <div id="userModal" class="modal fade">
-        <div id="userDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+        <div id="userDialog" class="modal-dialog modal-dialog-scrollable" hx-target="this"></div>
     </div>
 
     {% block add_script %}
     {% load static %}
-        <script src="{% static 'htmx-interactive-teams.js' %}"></script>
+        <script src="{% static 'htmx-modal.js' %}"></script>
     {% endblock add_script %}
 {% endblock content %}

@@ -28,15 +28,15 @@
 
 {% if not teams_readonly %}
     <div id="membersModal" class="modal fade">
-        <div id="membersDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+        <div id="membersDialog" class="modal-dialog modal-dialog-scrollable" hx-target="this"></div>
     </div>
     <div id="teamsModal" class="modal fade">
-        <div id="teamsDialog" class="modal-dialog modal-dialog-centered modal-dialog-scrollable" hx-target="this"></div>
+        <div id="teamsDialog" class="modal-dialog modal-dialog-scrollable" hx-target="this"></div>
     </div>
     
     {% block add_script %}
     {% load static %}
-    <script src="{% static 'htmx-interactive.js' %}"></script>
+    <script src="{% static 'htmx-modal.js' %}"></script>
     {% endblock add_script %}
 {% endif %}
 {% endblock content %}
