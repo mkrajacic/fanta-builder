@@ -9,7 +9,7 @@ from django.conf.urls.static import static
 class Singer(models.Model):
     name = models.CharField(max_length=50, unique=True)
     song = models.CharField(max_length=100)
-    singer_image = models.ImageField(null=True, blank=True, default="/unknown.svg")
+    singer_image = models.ImageField(null=True, blank=True, default="unknown.svg")
     points_cost = models.PositiveSmallIntegerField(validators=[MinValueValidator(0), MaxValueValidator(max_usable_points)], default=0)
 
     def __str__(self):
@@ -17,7 +17,7 @@ class Singer(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    team_image = models.ImageField(null=True, blank=True, default="/unknown.svg")
+    team_image = models.ImageField(null=True, blank=True, default="unknown.svg")
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     captain = models.ForeignKey(Singer, on_delete=models.SET_NULL, null=True, blank=True)
 
