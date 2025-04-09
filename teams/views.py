@@ -26,6 +26,7 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "teams/index.html"
 
     def get_queryset(self):
+        #logger.error("test")
         try:
             return self.request.user.team_set.all()
         except Exception as e:
@@ -80,10 +81,14 @@ class ShowSingers(generic.ListView):
     context_object_name = "singers"
 
     def get_queryset(self):
-        singers = Singer.objects.all()
-        self.queryset = singers
-        self.extra_context = {"singers_count": len(singers)}
-        return super().get_queryset()
+        try:
+            singers = Singer.objects.all()
+            self.queryset = singers
+            self.extra_context = {"singers_count": len(singers)}
+            return super().get_queryset()
+        except Exception as e:
+            logger.error(f"Exception while fetching singer data: {e}")
+            return Singer.objects.none()
 
 @login_required
 def edit_members(request, team_id):
@@ -94,41 +99,92 @@ def edit_members(request, team_id):
         success_message = "Team members successfully added"
 
     if request.method == "POST":
-        json_string_choices = request.POST['choices']
-        choices = json.loads(json_string_choices)
-        captain = int(request.POST['captain'])
+
+        if 'choices' not in request.POST:
+            logger.error("There was an attempt to add team members without sending the member choices")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members! Please select members", "error")
+        else:
+            json_string_choices = request.POST['choices']
+
+        try:
+            choices = json.loads(json_string_choices)
+            choices = [int(choice) for choice in choices]
+        except Exception as e:
+            logger.error(f"There was an attempt to add team members while passing an invalid choices value: {e}")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members! Please pass valid choices", "error")
+
+        if 'captain' not in request.POST:
+            logger.error("There was an attempt to add team members without picking a captain")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members! Please select a captain", "error")
+        else:
+            try:
+                captain = int(request.POST['captain'])
+            except ValueError:
+                logger.error("There was an attempt to add team members while passing an invalid captain value")
+                return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members! Please select a valid captain", "error")
+
+        if captain not in choices:
+            logger.error("There was an attempt to add a team with a captain not among the selected choices")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members!", "error")
+
+        if len(choices) != max_slots:
+            logger.error("There was an attempt to add more or less team members than allowed")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members!", "error")
 
         team = get_object_or_404(Team, pk=team_id)
+
+        sum_members = []
         new_members = []
         if not add_mode:
-            current_members = TeamMember.objects.filter(team_id=team.id)
-            for current_member in current_members:
-                if current_member.id not in choices:
-                    member_to_delete = get_object_or_404(TeamMember, team_id=current_member.team, singer_id=current_member.singer)
-                    member_to_delete.delete()
+            try:
+                current_members = TeamMember.objects.filter(team_id=team.id)
+                for current_member in current_members:
+                    if current_member.singer.id not in choices:
+                        member_to_delete = get_object_or_404(TeamMember, team_id=current_member.team, singer_id=current_member.singer.id)
+                        member_to_delete.delete()
+                    else:
+                        sum_members.append(current_member.singer.points_cost)
+            except Exception as e:
+                logger.error(f"Exception while fetching or deleting current team members: {e}")
+                return UtilityFunctions.toastTrigger(request, 500, "Failed to update team members!", "error")
 
         for choice in choices:
-            singer = get_object_or_404(Singer, pk=choice)
-            if not TeamMember.team_contains_member(TeamMember, team_id, singer.id):
-                new_members.append(TeamMember(team_id=team_id, singer_id=singer.id))
-            if singer.id == captain:
-                team.captain = singer
-                team.save()
+            try:
+                singer = get_object_or_404(Singer, pk=choice)
+                if not TeamMember.team_contains_member(TeamMember, team_id, singer.id):
+                    new_members.append(TeamMember(team_id=team_id, singer_id=singer.id))
+                    sum_members.append(singer.points_cost)
+                if singer.id == captain:
+                    team.captain = singer
+                    team.save()
+            except Exception as e:
+                logger.error(f"Exception while adding new team members: {e}")
+                return UtilityFunctions.toastTrigger(request, 500, f"Failed to add team members!", "error")
 
+        points_used = sum(sum_members)
+        if points_used > max_points:
+            logger.error("There was an attempt to add team members with a higher overall cost than allowed")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team members!", "error")
+            
         TeamMember.objects.bulk_create(new_members)
         return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
+        
     else:
-        team = get_object_or_404(Team, pk=team_id)
-        singers = Singer.objects.all()
-        current_members_ids = []
-        if add_mode:
-            form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
-            form_action += '?' + urlencode({"add": "true"})
-        else:
-            form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
-            current_members = TeamMember.objects.filter(team_id=team.id)
-            for current_member in current_members:
-                current_members_ids.append(current_member.singer_id)
+        try:
+            team = get_object_or_404(Team, pk=team_id)
+            singers = Singer.objects.all()
+            current_members_ids = []
+            if add_mode:
+                form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
+                form_action += '?' + urlencode({"add": "true"})
+            else:
+                form_action = reverse('teams:edit-members', kwargs={'team_id': team_id})
+                current_members = TeamMember.objects.filter(team_id=team.id)
+                for current_member in current_members:
+                    current_members_ids.append(current_member.singer_id)
+        except Exception as e:
+            logger.error(f"Exception while fetching team or singer data: {e}")
+            return UtilityFunctions.toastTrigger(request, 204, f"Failed to retrive team or singer data", "error")
     
     return render(request, "teams/edit-members.html", {
         "team": team,
@@ -161,10 +217,10 @@ def add_team(request):
                         team = Team.objects.create(name=name, user=user)
                 else:
                     logger.error(f"User has tried to add a new team after surpassing their team limit")
-                    return UtilityFunctions.toastTrigger(request, 204, f"Failed to add team, team limit has been reached!", "error")
+                    return UtilityFunctions.toastTrigger(request, 400, f"Failed to add team, team limit has been reached!", "error")
             except Exception as e:
                 logger.error(f"Exception while adding team: {e}")
-                return UtilityFunctions.toastTrigger(request, 204, f"Failed to add team", "error")
+                return UtilityFunctions.toastTrigger(request, 500, f"Failed to add team", "error")
             
             return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamRefresh": None}])
         else:
@@ -199,7 +255,7 @@ def edit_team(request, team_id):
                 team.save()
             except Exception as e:
                 logger.error(f"Exception while editing team: {e}")
-                return UtilityFunctions.toastTrigger(request, 204, f"Failed to edit team", "error")
+                return UtilityFunctions.toastTrigger(request, 500, f"Failed to edit team", "error")
             
             return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
         else:
@@ -270,6 +326,11 @@ def reload_teams(request):
 
 @login_required
 def delete_team(request, team_id):
+
+    if not team_id:
+        logger.error("There was an attempt to delete a team without passing a team id")
+        return UtilityFunctions.toastTrigger(request, 400, "Failed to delete team", "error")
+
     success_message = "Team successfully deleted"
 
     if request.method == "DELETE":
@@ -279,7 +340,7 @@ def delete_team(request, team_id):
             team.delete()
         except Exception as e:
             logger.error(f"Exception while deleting team: {e}")
-            return UtilityFunctions.toastTrigger(request, 204, f"Failed to delete team", "error")
+            return UtilityFunctions.toastTrigger(request, 500, f"Failed to delete team", "error")
         
         return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamRefresh": None}])
 
@@ -288,11 +349,26 @@ def update_captain(request):
     success_message = "Team captain successfully changed"
 
     if request.method == "POST":
-        team_id = request.POST['team_id']
-        captain_id = request.POST['captain_id']
-        team = get_object_or_404(Team, pk=team_id)
-        singer = get_object_or_404(Singer, pk=captain_id)
 
-        team.captain = singer
-        team.save()
-        return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
+        if 'team_id' not in request.POST:
+            logger.error("There was an attempt to update a captain without passing a team")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team captain!", "error")
+        else:
+            team_id = request.POST['team_id']
+
+        if 'captain_id' not in request.POST:
+            logger.error("There was an attempt to update a captain without passing a captain")
+            return UtilityFunctions.toastTrigger(request, 400, "Failed to update team captain!", "error")
+        else:
+            captain_id = request.POST['captain_id']
+
+        try:
+            team = get_object_or_404(Team, pk=team_id)
+            singer = get_object_or_404(Singer, pk=captain_id)
+
+            team.captain = singer
+            team.save()
+            return UtilityFunctions.toastTrigger(request, 204, success_message, "success", [{"teamDataChanged_" + str(team_id): None}])
+        except Exception as e:
+            logger.error(f"Exception while updating team captain: {e}")
+            return UtilityFunctions.toastTrigger(request, 500, "Failed to update team captain!", "error")
