@@ -1,7 +1,5 @@
-from django import forms
 from django.forms import ModelForm
 from teams.models import Team
-from django.core.exceptions import ValidationError
 import logging
 logger = logging.getLogger('custom_logger')
 
@@ -19,7 +17,7 @@ class TeamForm(ModelForm):
         data = self.cleaned_data.get("team_image")
         
         if data and hasattr(data, 'file'):
-            return data  # Return uploaded file
+            return data 
         
         if self.instance and self.instance.team_image:
             return self.instance.team_image

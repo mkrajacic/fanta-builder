@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 User=get_user_model()
 import logging
 logger = logging.getLogger('custom_logger')
-from django.views import generic
 from django.contrib.auth.decorators import login_required
 from common import UtilityFunctions
 from django.shortcuts import render, get_object_or_404

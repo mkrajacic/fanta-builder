@@ -1,17 +1,10 @@
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from .models import TeamResult, SingerResult
-from django.urls import reverse
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views import generic
-from django.utils import timezone
 from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.conf import settings
-import json
-from urllib.parse import urlencode
-from common import UtilityFunctions
 from django.db.models import F, Window
 from django.db.models.functions import Rank
 import logging

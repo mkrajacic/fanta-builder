@@ -1,14 +1,10 @@
-import datetime
-from unittest.mock import patch
 from django.test import TestCase
-from django.utils import timezone
 from django.urls import reverse
 from django.conf import settings
 from common import TestFunctions
 from django.test import RequestFactory
 from django.urls import reverse
 from teams import views
-from .models import Team
 from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.contrib.auth.models import AnonymousUser
@@ -35,24 +31,6 @@ class TeamListViewTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertIn('unauthorized', response.headers.get('Location'))
 
-    """def test_logging_detected(self):
-        user = TestFunctions.add_user("mk")
-        self.request.user = user
-
-        with self.assertLogs(logger='custom_logger', level='ERROR') as cm:
-            self.view.get_queryset()
-            self.assertEqual(cm.output, ["ERROR:custom_logger:test"])"""
-
-    """def test_get_queryset_exception_handling(self):
-        user = TestFunctions.add_user("mk")
-        self.request.user = user
-        self.client.force_login(user)
-
-        with self.assertLogs(logger='custom_logger', level="ERROR") as cm:
-            with patch.object(user.team_set, 'all') as mock_method:
-                mock_method.side_effect = Exception("forced exception")
-                response = self.client.get(reverse('teams:index')) 
-                self.assertEqual(cm.output, "d")"""
 
 class SingerListViewTests(TestCase):
     def setUp(self):
@@ -99,7 +77,6 @@ class TeamMemberUpdateTests(TestCase):
         s1 = TestFunctions.add_singer("singer 1", f"song 1")
         s2 = TestFunctions.add_singer("singer 2", f"song 2")
         s3 = TestFunctions.add_singer("singer 3", f"song 3")
-        s4 = TestFunctions.add_singer("singer 4", f"song 4")
         s5 = TestFunctions.add_singer("singer 5", f"song 5")
 
         choices = json.dumps([
@@ -161,7 +138,6 @@ class TeamMemberUpdateTests(TestCase):
         self.assertEqual(response.status_code, 500)
 
     def test_team_member_update_invalid_member(self):
-
         s1 = TestFunctions.add_singer("singer 1", f"song 1")
         s2 = TestFunctions.add_singer("singer 2", f"song 2")
         s3 = TestFunctions.add_singer("singer 3", f"song 3")
@@ -204,7 +180,6 @@ class TeamMemberUpdateTests(TestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_team_member_update_with_invalid_captain(self):
-
         s1 = TestFunctions.add_singer("singer 1", f"song 1")
         s2 = TestFunctions.add_singer("singer 2", f"song 2")
         s3 = TestFunctions.add_singer("singer 3", f"song 3")
@@ -259,7 +234,7 @@ class TeamMemberUpdateTests(TestCase):
             str(s5.id),
         ])
         post_data = {
-            'choices': '["1","2","3","4","5"]',
+            'choices': choices,
             'captain': s6.id
         }
         response = self.c.post(reverse('teams:edit-members', kwargs={"team_id": self.team.pk}), post_data)

@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 from teams.models import Team, Singer
-from rules.models import Event
 from results.models import TeamResult, SingerResult
 from django.db.models import Count
 from collections import OrderedDict

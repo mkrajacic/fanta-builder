@@ -1,10 +1,7 @@
-from django.shortcuts import render, get_object_or_404
 from .models import Rules, Occurrence
 from django.views import generic
-from django.utils import timezone
 from django.contrib.auth import get_user_model
 User=get_user_model()
-from django.conf import settings
 
 class ShowRules(generic.ListView):
     template_name = "rules/index.html"

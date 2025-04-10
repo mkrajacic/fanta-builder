@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 User=get_user_model()
 max_usable_points = settings.MAXIMUM_USABLE_POINTS
-from django.conf.urls.static import static
 
 class Singer(models.Model):
     name = models.CharField(max_length=50, unique=True)

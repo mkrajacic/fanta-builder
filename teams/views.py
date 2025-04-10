@@ -1,4 +1,3 @@
-from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from .models import Team, Singer, TeamMember
 from results.models import TeamResult
@@ -6,7 +5,6 @@ from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.views import generic
-from django.utils import timezone
 from django.contrib.auth import get_user_model
 User=get_user_model()
 from django.conf import settings
@@ -26,7 +24,6 @@ class ShowTeams(LoginRequiredMixin, generic.ListView):
     template_name = "teams/index.html"
 
     def get_queryset(self):
-        #logger.error("test")
         try:
             return self.request.user.team_set.all()
         except Exception as e:
