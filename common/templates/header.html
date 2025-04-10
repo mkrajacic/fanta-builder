@@ -11,13 +11,19 @@
           <li class="nav-item">
             <a class="nav-link text-custom-300" href="{% url 'profile' %}">Profile</a>
           </li>
+        {% endif %}
           <li class="nav-item">
             <a class="nav-link text-custom-300" href="{% url 'results:results-singers' %}">Results</a>
           </li>          
           <li class="nav-item">
               <a class="nav-link text-custom-300" href="{% url 'results:leaderboards' %}">Leaderboards</a>
           </li>
-        {% endif %}
+          <li class="nav-item">
+            <a class="nav-link text-custom-300" href="{% url 'rules:index' %}">Rules</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-custom-300" href="{% url 'singers' %}">Singers</a>
+          </li>
         {% if user.is_authenticated %}      
           <li class="nav-item">
             <form method="POST" action="{% url 'logout' %}">
