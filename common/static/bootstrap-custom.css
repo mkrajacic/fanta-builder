@@ -1,9 +1,9 @@
 :root {
-    --custom-100: #fff7ed; 
-    --custom-200: #ffedd5;
-    --custom-300: #fed7aa;
-    --custom-400: #fdba74;
-    --custom-500: #f97316; 
+    --custom-100: #f0f9ff; 
+    --custom-200: #e0f2fe;
+    --custom-300: #bae6fd;
+    --custom-400: #7dd3fc;
+    --custom-500: #38bdf8; 
     --custom-shadow: 0 0.5rem 1rem var(--custom-200);
   }
   
