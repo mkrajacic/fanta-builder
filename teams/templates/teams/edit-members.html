@@ -3,10 +3,10 @@
   {% for singer in singers %}
       {
           id: {{singer.id}},
-          name: '{{singer.name}}',
-          song: '{{singer.song}}',
+          name: `{{singer.name}}`,
+          song: `{{singer.song}}`,
           cost: {{singer.points_cost}},
-          image: '{{singer.singer_image}}'
+          image: `{{singer.singer_image}}`
       },
   {% endfor %}
   ],
@@ -116,8 +116,8 @@
             <template x-for="singer in singers" :key="singer.id">
               <div class="d-flex align-items-center gap-3 p-2 hover-bg" :class="{ 
                      'bg-custom-200': isSelected(singer.id),
-                     'opacity-25': !isSelected(singer.id) && insufficientPoints(singer.cost),
-                     'pe-none': !isSelected(singer.id) && insufficientPoints(singer.cost)
+                     'opacity-25': !isSelected(singer.id) && insufficientPoints(singer.cost) || teamFilled,
+                     'pe-none': !isSelected(singer.id) && insufficientPoints(singer.cost) || teamFilled
                    }" @click="toggleSelection(singer.id)" :style="{
                      cursor: !isSelected(singer.id) && insufficientPoints(singer.cost) 
                        ? 'not-allowed' 
