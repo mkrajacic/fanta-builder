@@ -67,6 +67,12 @@ Go to the project directory
   .\venv\Scripts\activate
 ```
 
+Install requirements
+
+```bash
+  pip install -r requirements.txt
+```
+
 Make django migrations and migrate
 
 ```bash
