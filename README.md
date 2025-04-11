@@ -1,6 +1,6 @@
-# FantaBuilder
+# FantasySongContest
 
-This is a fantasy game project tailored towards singing competitions such as the Eurovision Song Contest, Sanremo Music Festival and others. Users can create teams and allocate singers as the members of the team.
+This is a fantasy game project tailored towards singing competitions. Users can create teams and allocate singers as the members of the team.
 The user must select a member as the captain of the team. There is a set of occurrences. If an occurrence happens to a singer that is a member of the team, that team will have points added or deducted, depending on the type of the occurrence.
 For example, if "Singer A" does "Thing A", the team which has "Singer A" as one of their members will have 20 points added to their result, because "Thing A" was specified to be a bonus which adds 20 points. Similarly, if "Thing A" was specified to be a penalty, the team would have 20 points deducted instead. If "Singer A" was set as the team captain, the points for the occurrence would be doubled, meaning the team would receive or lose 40 points.
 
@@ -51,13 +51,13 @@ To run this project, you will need to add the following environment variables to
 Clone the project
 
 ```bash
-  git clone https://github.com/mkrajacic/fanta-builder.git
+  git clone https://github.com/mkrajacic/fantasy-song-contest.git
 ```
 
 Go to the project directory
 
 ```bash
-  cd fanta-builder
+  cd fantasy-song-contest
 ```
 
 (Optional) Create python virtual environment and activate it
