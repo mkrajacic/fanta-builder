@@ -18,19 +18,19 @@ Teams can have a limited number of assigned members. Users can create a limited 
 
 ## Examples
 #### Add team
-![add_team](https://github.com/user-attachments/assets/96e4cff8-1dae-4e79-bba0-cd2d61a79811)
+![add_team](https://github.com/user-attachments/assets/74593f6c-b23d-4762-893b-c8133d2d7bcd)
 
 #### Add members to the team and select the captain
-![add_team_members](https://github.com/user-attachments/assets/dd10c102-e69e-4c37-a2ca-421326bbad41)
+![add_team_members](https://github.com/user-attachments/assets/01d861f9-db66-4d98-b559-c228a44b2e0f)
 
 #### Update captain
-![update_captain](https://github.com/user-attachments/assets/23742395-f95e-4240-8d37-97b231702a2c)
+![update_captain](https://github.com/user-attachments/assets/c0f6f5a3-0a15-4d78-8b56-5b74308a1ac5)
 
 #### Singer results
-![singer_results](https://github.com/user-attachments/assets/04e7f27e-d19b-4d82-b165-9c21f86a4181)
+![singer_results](https://github.com/user-attachments/assets/ee4ef0c5-c702-44a6-8cf6-0d9d30c471cd)
 
 #### Leaderboards
-![leaderboards](https://github.com/user-attachments/assets/b15c71e9-fa7c-4660-8dce-f262848531a7)
+![leaderboards](https://github.com/user-attachments/assets/8807a8fc-6947-4cb3-8f4e-5989ecb1d5f2)
 
 
 ## Environment Variables
